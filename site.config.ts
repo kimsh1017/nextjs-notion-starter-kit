@@ -17,7 +17,6 @@ export default siteConfig({
   description: 'Example Next.js Notion Starter Kit Site',
 
   // social usernames (optional)
-  twitter: undefined,
   github: 'kimsh1017',
   linkedin: 'null',
   // mastodon: '#', // optional mastodon profile URL, provides link verification
