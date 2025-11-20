@@ -10,9 +10,7 @@ import BodyClassName from 'react-body-classname'
 import {
   type NotionComponents,
   NotionRenderer,
-  useNotionContext
 } from 'react-notion-x'
-import { EmbeddedTweet, TweetNotFound, TweetSkeleton } from 'react-tweet'
 import { useSearchParam } from 'react-use'
 
 import type * as types from '@/lib/types'
@@ -131,17 +129,6 @@ const Modal = dynamic(
   }
 )
 
-function Tweet({ id }: { id: string }) {
-  const { recordMap } = useNotionContext()
-  const tweet = (recordMap as types.ExtendedTweetRecordMap)?.tweets?.[id]
-
-  return (
-    <React.Suspense fallback={<TweetSkeleton />}>
-      {tweet ? <EmbeddedTweet tweet={tweet} /> : <TweetNotFound />}
-    </React.Suspense>
-  )
-}
-
 const propertyLastEditedTimeValue = (
   { block, pageHeader }: any,
   defaultFn: () => React.ReactNode
@@ -201,7 +188,6 @@ export function NotionPage({
       Equation,
       Pdf,
       Modal,
-      Tweet,
       Header: NotionPageHeader,
       propertyLastEditedTimeValue,
       propertyTextValue,
@@ -301,7 +287,7 @@ export function NotionPage({
       />
 
       {isLiteMode && <BodyClassName className='notion-lite' />}
-      {isDarkMode && <BodyClassName className='dark-mode' />}
+              {isDarkMode && <BodyClassName className='dark-mode' />}
 
       <NotionRenderer
         bodyClassName={cs(
