@@ -5,9 +5,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: transparent;
-  border-bottom: 1px solid #e2e8f0;
-  color: #0f172a;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--fg-color);
 }
 
 .navbarLeft,
@@ -26,23 +26,6 @@
 
 .navbarBrand:hover {
   color: #888888;
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .navbar {
-    background-color: transparent;
-    border-bottom-color: #1e293b;
-    color: #f1f5f9;
-  }
-
-  .navbarBrand {
-    color: #000000;
-  }
-
-  .navbarBrand:hover {
-    color: #888888;
-  }
 }
 
 /* Responsive Design */
