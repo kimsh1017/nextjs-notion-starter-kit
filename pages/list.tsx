@@ -2,7 +2,12 @@
 import type { PageBlock } from 'notion-types'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
-import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
+import {
+  formatDate,
+  getBlockTitle,
+  getPageProperty,
+  getTextContent
+} from 'notion-utils'
 
 import type { PageProps } from '@/lib/types'
 import { rootNotionPageId } from '@/lib/config'
@@ -23,6 +28,7 @@ interface Post {
 interface ListPageProps extends PageProps {
   posts: Post[]
   pageTitle: string
+  pageHeader?: string
 }
 
 export const getStaticProps = async () => {
@@ -32,9 +38,24 @@ export const getStaticProps = async () => {
   const keys = Object.keys(recordMap.block)
   const rootPageKey = keys[0]
   let pageTitle = 'Blog Posts'
+  let pageHeader: string | null = null
+
   if (rootPageKey) {
     const rootPageBlock = recordMap.block[rootPageKey]?.value
-    pageTitle = rootPageBlock ? getBlockTitle(rootPageBlock, recordMap) : 'Blog Posts'
+
+    if (rootPageBlock) {
+      pageTitle = getBlockTitle(rootPageBlock, recordMap)
+
+      if (rootPageBlock.content) {
+        for (const blockId of rootPageBlock.content) {
+          const block = recordMap.block[blockId]?.value
+          if (block && block.type === 'text' && block.properties?.title) {
+            pageHeader = getTextContent(block.properties.title)
+            break // Stop after finding the first text block
+          }
+        }
+      }
+    }
   }
 
   const posts: Post[] = []
@@ -49,10 +70,19 @@ export const getStaticProps = async () => {
     ) {
       const title = getBlockTitle(block, recordMap)
       if (title) {
-        const publishedDate = getPageProperty<number>('Published', block, recordMap)
-        const description = getPageProperty<string>('Description', block, recordMap)
+        const publishedDate = getPageProperty<number>(
+          'Published',
+          block,
+          recordMap
+        )
+        const description = getPageProperty<string>(
+          'Description',
+          block,
+          recordMap
+        )
         const tags = getPageProperty<string[]>('Tags', block, recordMap)
-        const coverImage = mapImageUrl((block as PageBlock).format?.page_cover, block) || null
+        const coverImage =
+          mapImageUrl((block as PageBlock).format?.page_cover, block) || null
 
         posts.push({ id, title, publishedDate, description, tags, coverImage })
       }
@@ -62,14 +92,14 @@ export const getStaticProps = async () => {
   // Sort posts by date
   posts.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
 
-  const props = { posts, pageTitle }
+  const props = { posts, pageTitle, pageHeader }
   return {
     props,
     revalidate: 10
   }
 }
 // The React component to render the list of posts.
-export default function ListPage({ posts, pageTitle }: ListPageProps) {
+export default function ListPage({ posts, pageTitle, pageHeader }: ListPageProps) {
   return (
     // We can reuse the NotionPage component for a consistent layout,
     // or create a completely new one. For simplicity, we'll add to it.
@@ -77,6 +107,7 @@ export default function ListPage({ posts, pageTitle }: ListPageProps) {
     <div>
       <header>
         <h1>{pageTitle}</h1>
+        {pageHeader && <p className='page-header'>{pageHeader}</p>}
       </header>
       <main>
         {posts?.length > 0 ? (
@@ -145,6 +176,11 @@ export default function ListPage({ posts, pageTitle }: ListPageProps) {
         }
         li a:hover .title {
           color: #0070f3;
+        }
+        .page-header {
+          margin: 1rem 0;
+          font-size: 1.1rem;
+          color: #555;
         }
         .cover-image-wrapper {
           position: relative;
