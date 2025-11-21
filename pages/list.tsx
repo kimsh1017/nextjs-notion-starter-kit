@@ -29,11 +29,12 @@ export const getStaticProps = async () => {
   const pageId = rootNotionPageId
   const recordMap = await getPage(pageId)
 
-  const collectionId = Object.keys(recordMap.collection)[0]
+  const keys = Object.keys(recordMap.block)
+  const rootPageKey = keys[0]
   let pageTitle = 'Blog Posts'
-  if (collectionId) {
-    const collection = recordMap.collection[collectionId]?.value
-    pageTitle = collection?.name?.[0]?.[0] || 'Blog Posts'
+  if (rootPageKey) {
+    const rootPageBlock = recordMap.block[rootPageKey]?.value
+    pageTitle = rootPageBlock ? getBlockTitle(rootPageBlock, recordMap) : 'Blog Posts'
   }
 
   const posts: Post[] = []
