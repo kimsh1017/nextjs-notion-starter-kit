@@ -28,7 +28,7 @@ interface Post {
 interface ListPageProps extends PageProps {
   posts: Post[]
   pageTitle: string
-  pageHeader?: string
+  pageHeader?: string[]
 }
 
 export const getStaticProps = async () => {
@@ -38,7 +38,7 @@ export const getStaticProps = async () => {
   const keys = Object.keys(recordMap.block)
   const rootPageKey = keys[0]
   let pageTitle = 'Blog Posts'
-  let pageHeader: string | null = null
+  const pageHeader: string[] = []
 
   if (rootPageKey) {
     const rootPageBlock = recordMap.block[rootPageKey]?.value
@@ -49,9 +49,11 @@ export const getStaticProps = async () => {
       if (rootPageBlock.content) {
         for (const blockId of rootPageBlock.content) {
           const block = recordMap.block[blockId]?.value
+          if (block?.type === 'collection_view') {
+            break
+          }
           if (block && block.type === 'text' && block.properties?.title) {
-            pageHeader = getTextContent(block.properties.title)
-            break // Stop after finding the first text block
+            pageHeader.push(getTextContent(block.properties.title))
           }
         }
       }
@@ -107,7 +109,12 @@ export default function ListPage({ posts, pageTitle, pageHeader }: ListPageProps
     <div>
       <header>
         <h1>{pageTitle}</h1>
-        {pageHeader && <p className='page-header'>{pageHeader}</p>}
+        {pageHeader &&
+          pageHeader.map((header, index) => (
+            <p className='page-header' key={index}>
+              {header}
+            </p>
+          ))}
       </header>
       <main>
         {posts?.length > 0 ? (
