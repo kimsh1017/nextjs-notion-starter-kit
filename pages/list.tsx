@@ -1,11 +1,13 @@
 
+import type { PageBlock } from 'notion-types'
+import Image from 'next/legacy/image'
 import Link from 'next/link'
-import { formatDate,getBlockTitle, getPageProperty } from 'notion-utils'
+import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
 
 import type { PageProps } from '@/lib/types'
 import { rootNotionPageId } from '@/lib/config'
+import { mapImageUrl } from '@/lib/map-image-url'
 import { getPage } from '@/lib/notion'
-
 
 // This is the shape of the data we'll be fetching for our list.
 interface Post {
@@ -14,6 +16,7 @@ interface Post {
   publishedDate?: number
   description?: string
   tags?: string[]
+  coverImage?: string | null
 }
 
 // Extend PageProps to include our new `posts` prop.
@@ -40,8 +43,9 @@ export const getStaticProps = async () => {
         const publishedDate = getPageProperty<number>('Published', block, recordMap)
         const description = getPageProperty<string>('Description', block, recordMap)
         const tags = getPageProperty<string[]>('Tags', block, recordMap)
+        const coverImage = mapImageUrl((block as PageBlock).format?.page_cover, block) || null
 
-        posts.push({ id, title, publishedDate, description, tags })
+        posts.push({ id, title, publishedDate, description, tags, coverImage })
       }
     }
   }
@@ -55,7 +59,6 @@ export const getStaticProps = async () => {
     revalidate: 10
   }
 }
-
 // The React component to render the list of posts.
 export default function ListPage({ posts }: ListPageProps) {
   return (
@@ -73,6 +76,16 @@ export default function ListPage({ posts }: ListPageProps) {
               <li key={post.id}>
                 <Link href={`/${post.id}`} legacyBehavior>
                   <a>
+                    {post.coverImage && (
+                      <div className='cover-image-wrapper'>
+                        <Image
+                          src={post.coverImage}
+                          alt={post.title}
+                          layout='fill'
+                          objectFit='cover'
+                        />
+                      </div>
+                    )}
                     <div className='title'>{post.title}</div>
                     {post.publishedDate && (
                       <div className='date'>
@@ -123,6 +136,14 @@ export default function ListPage({ posts }: ListPageProps) {
         }
         li a:hover .title {
           color: #0070f3;
+        }
+        .cover-image-wrapper {
+          position: relative;
+          width: 100%;
+          height: 200px; /* Adjust height as needed */
+          margin-bottom: 1rem;
+          border-radius: 8px;
+          overflow: hidden;
         }
         .title {
           font-size: 1.5rem;
