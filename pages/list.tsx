@@ -22,11 +22,19 @@ interface Post {
 // Extend PageProps to include our new `posts` prop.
 interface ListPageProps extends PageProps {
   posts: Post[]
+  pageTitle: string
 }
 
 export const getStaticProps = async () => {
   const pageId = rootNotionPageId
   const recordMap = await getPage(pageId)
+
+  const collectionId = Object.keys(recordMap.collection)[0]
+  let pageTitle = 'Blog Posts'
+  if (collectionId) {
+    const collection = recordMap.collection[collectionId]?.value
+    pageTitle = collection?.name?.[0]?.[0] || 'Blog Posts'
+  }
 
   const posts: Post[] = []
   for (const id in recordMap.block) {
@@ -53,21 +61,21 @@ export const getStaticProps = async () => {
   // Sort posts by date
   posts.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
 
-  const props = { posts }
+  const props = { posts, pageTitle }
   return {
     props,
     revalidate: 10
   }
 }
 // The React component to render the list of posts.
-export default function ListPage({ posts }: ListPageProps) {
+export default function ListPage({ posts, pageTitle }: ListPageProps) {
   return (
     // We can reuse the NotionPage component for a consistent layout,
     // or create a completely new one. For simplicity, we'll add to it.
     // A proper implementation might involve a new root component.
     <div>
       <header>
-        <h1>Blog Posts</h1>
+        <h1>{pageTitle}</h1>
       </header>
       <main>
         {posts?.length > 0 ? (
