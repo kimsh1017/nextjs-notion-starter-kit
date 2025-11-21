@@ -1,6 +1,6 @@
 
 import Link from 'next/link'
-import { getBlockTitle } from 'notion-utils'
+import { formatDate,getBlockTitle, getPageProperty } from 'notion-utils'
 
 import type { PageProps } from '@/lib/types'
 import { rootNotionPageId } from '@/lib/config'
@@ -11,6 +11,9 @@ import { getPage } from '@/lib/notion'
 interface Post {
   id: string
   title: string
+  publishedDate?: number
+  description?: string
+  tags?: string[]
 }
 
 // Extend PageProps to include our new `posts` prop.
@@ -34,10 +37,17 @@ export const getStaticProps = async () => {
     ) {
       const title = getBlockTitle(block, recordMap)
       if (title) {
-        posts.push({ id, title })
+        const publishedDate = getPageProperty<number>('Published', block, recordMap)
+        const description = getPageProperty<string>('Description', block, recordMap)
+        const tags = getPageProperty<string[]>('Tags', block, recordMap)
+
+        posts.push({ id, title, publishedDate, description, tags })
       }
     }
   }
+
+  // Sort posts by date
+  posts.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
 
   const props = { posts }
   return {
@@ -61,8 +71,28 @@ export default function ListPage({ posts }: ListPageProps) {
           <ul>
             {posts.map((post) => (
               <li key={post.id}>
-                <Link href={`/${post.id}`}>
-                  {post.title}
+                <Link href={`/${post.id}`} legacyBehavior>
+                  <a>
+                    <div className='title'>{post.title}</div>
+                    {post.publishedDate && (
+                      <div className='date'>
+                        Published on{' '}
+                        {formatDate(post.publishedDate, { month: 'long' })}
+                      </div>
+                    )}
+                    {post.description && (
+                      <div className='description'>{post.description}</div>
+                    )}
+                    {post.tags && (
+                      <div className='tags'>
+                        {post.tags.map((tag) => (
+                          <span className='tag' key={tag}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </a>
                 </Link>
               </li>
             ))}
@@ -83,16 +113,41 @@ export default function ListPage({ posts }: ListPageProps) {
           padding: 0;
         }
         li {
-          padding: 0.5rem 0;
+          padding: 1.5rem 0;
           border-bottom: 1px solid #eee;
         }
         li a {
           text-decoration: none;
-          color: #333;
-          font-size: 1.2rem;
+          color: inherit;
+          display: block;
         }
-        li a:hover {
+        li a:hover .title {
           color: #0070f3;
+        }
+        .title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+        .date {
+          font-size: 0.9rem;
+          color: #666;
+          margin-bottom: 0.5rem;
+        }
+        .description {
+          margin-bottom: 1rem;
+          color: #444;
+        }
+        .tags {
+          display: flex;
+          gap: 0.5rem;
+        }
+        .tag {
+          display: inline-block;
+          padding: 0.25rem 0.5rem;
+          background: #eee;
+          border-radius: 4px;
+          font-size: 0.8rem;
         }
       `}</style>
     </div>
