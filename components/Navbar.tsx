@@ -24,7 +24,12 @@ function ToggleThemeButton() {
 
   return (
     <div
-      className={cs('breadcrumb', 'button', !hasMounted && styles.hidden)}
+      className={cs(
+        'breadcrumb',
+        'button',
+        !hasMounted && styles.hidden,
+        styles.toggleDarkMode
+      )}
       onClick={onToggleTheme}
     >
       {hasMounted && isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}

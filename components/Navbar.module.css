@@ -35,6 +35,23 @@
   color: #ffffff;
 }
 
+.toggleDarkMode {
+  border-radius: 50%;
+  width: 2.5em; /* Adjust size as needed */
+  height: 2.5em; /* Adjust size as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  font-size: 1.2em; /* Ensure the icon is a good size */
+}
+
+.toggleDarkMode:hover {
+  background-color: rgba(136, 136, 136, 0.1); /* Subtle grey background on hover */
+  color: #2795e9; /* Keep the existing color change */
+}
+
 /* Responsive Design */
 @media (max-width: 640px) {
   .navbar {
