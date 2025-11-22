@@ -123,6 +123,32 @@ export default function ListPage({
               <li key={post.id} className='post-item'>
                 <Link href={`/${post.id}`} legacyBehavior>
                   <a className='post-link'>
+                    <div className='post-content'>
+                      <h2 className='post-title'>{post.title}</h2>
+                      {post.description && (
+                        <p className='post-description'>
+                          {post.description}
+                        </p>
+                      )}
+                      <div className='post-footer'>
+                        {post.tags && (
+                          <div className='post-tags'>
+                            {post.tags.map((tag) => (
+                              <span className='tag' key={tag}>
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        {post.publishedDate && (
+                          <div className='post-date'>
+                            {formatDate(post.publishedDate, {
+                              month: 'long'
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     {post.coverImage && (
                       <div className='cover-image-wrapper'>
                         <Image
@@ -133,29 +159,6 @@ export default function ListPage({
                         />
                       </div>
                     )}
-                    <div className='post-content'>
-                      <h2 className='post-title'>{post.title}</h2>
-                      {post.publishedDate && (
-                        <div className='post-date'>
-                          Published on{' '}
-                          {formatDate(post.publishedDate, { month: 'long' })}
-                        </div>
-                      )}
-                      {post.description && (
-                        <p className='post-description'>
-                          {post.description}
-                        </p>
-                      )}
-                      {post.tags && (
-                        <div className='post-tags'>
-                          {post.tags.map((tag) => (
-                            <span className='tag' key={tag}>
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
                   </a>
                 </Link>
               </li>
@@ -225,24 +228,33 @@ export default function ListPage({
         .post-link {
           text-decoration: none;
           color: inherit;
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
 
         .cover-image-wrapper {
           position: relative;
-          width: 100%;
-          height: 240px;
-          margin-bottom: 1.25rem;
-          overflow: hidden !important; /* Added !important */
+          width: 150px;
+          height: 100px;
+          margin-left: 2rem;
+          overflow: hidden !important;
           border: 1px solid var(--border-color);
           background-color: var(--bg-color-1);
           border-radius: 8px;
         }
 
         .post-content {
+          flex-grow: 1;
           display: flex;
           flex-direction: column;
           gap: 0.75rem;
+        }
+        .post-footer {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-top: 1rem;
         }
 
         .post-title {
