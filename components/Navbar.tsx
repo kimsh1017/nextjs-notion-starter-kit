@@ -47,19 +47,21 @@ export function Navbar() {
         isDarkMode ? styles.darkModeBorder : styles.lightModeBorder
       )}
     >
-      <div className={styles.navbarLeft}>
-        <Link
-          href='/list'
-          className={cs(
-            styles.navbarBrand,
-            isDarkMode ? styles.darkModeTextColor : styles.lightModeTextColor
-          )}
-        >
-          {siteConfig.name}
-        </Link>
-      </div>
-      <div className={styles.navbarRight}>
-        <ToggleThemeButton />
+      <div className={styles.navbarContent}>
+        <div className={styles.navbarLeft}>
+          <Link
+            href='/list'
+            className={cs(
+              styles.navbarBrand,
+              isDarkMode ? styles.darkModeTextColor : styles.lightModeTextColor
+            )}
+          >
+            {siteConfig.name}
+          </Link>
+        </div>
+        <div className={styles.navbarRight}>
+          <ToggleThemeButton />
+        </div>
       </div>
     </nav>
   )

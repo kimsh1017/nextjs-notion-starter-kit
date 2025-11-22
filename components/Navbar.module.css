@@ -1,12 +1,18 @@
 /* components/Navbar.module.css */
 
 .navbar {
+  padding: 1rem 0;
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+}
+
+.navbarContent {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--bg-color);
-  color: var(--fg-color);
 }
 
 .navbarLeft,
@@ -62,8 +68,8 @@
 
 /* Responsive Design */
 @media (max-width: 640px) {
-  .navbar {
-    padding: 1rem 1.5rem;
+  .navbarContent {
+    padding: 0 1.5rem;
   }
 
   .navbarBrand {
