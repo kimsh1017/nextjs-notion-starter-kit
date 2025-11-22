@@ -41,7 +41,12 @@ export function Navbar() {
   const { isDarkMode } = useDarkMode()
 
   return (
-    <nav className={styles.navbar}>
+    <nav
+      className={cs(
+        styles.navbar,
+        isDarkMode ? styles.darkModeBorder : styles.lightModeBorder
+      )}
+    >
       <div className={styles.navbarLeft}>
         <Link
           href='/list'

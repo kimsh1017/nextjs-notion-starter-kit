@@ -6,7 +6,6 @@
   align-items: center;
   padding: 1rem 2rem;
   background-color: var(--bg-color);
-  border-bottom: 1px solid var(--border-color);
   color: var(--fg-color);
 }
 
@@ -34,6 +33,15 @@
 .darkModeTextColor {
   color: #ffffff;
 }
+
+.lightModeBorder {
+  border-bottom: 1px solid #000000;
+}
+
+.darkModeBorder {
+  border-bottom: 1px solid #ffffff;
+}
+
 
 .toggleDarkMode {
   border-radius: 50%;
