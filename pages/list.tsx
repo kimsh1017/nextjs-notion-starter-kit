@@ -115,6 +115,11 @@ export default function ListPage({
               {header}
             </p>
           ))}
+      <div className='sort-controls'>
+          <button className='sort-button active'>Newest</button>
+          <button className='sort-button'>Oldest</button>
+          <button className='sort-button'>Title</button>
+        </div>
       </header>
       <main>
         {posts?.length > 0 ? (
@@ -203,6 +208,34 @@ export default function ListPage({
           line-height: 1.6;
           letter-spacing: -0.01em;
           font-weight: 400;
+        }
+
+        .sort-controls {
+          display: flex;
+          gap: 1rem;
+          margin: 2rem 0;
+        }
+
+        .sort-button {
+          padding: 0.5rem 1rem;
+          background-color: transparent;
+          border: 1px solid var(--border-color-2);
+          color: var(--fg-color-2);
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .sort-button:hover {
+          background-color: var(--bg-color-1);
+          border-color: var(--fg-color-link-hover);
+          color: var(--fg-color-link-hover);
+        }
+
+        .sort-button.active {
+          font-weight: bold;
+          text-decoration: underline;
+          text-underline-offset: 4px;
         }
 
         .posts-list {
