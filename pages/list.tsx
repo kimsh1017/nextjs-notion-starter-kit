@@ -311,6 +311,7 @@ export default function ListPage({
           border: 1px solid var(--border-color);
           background-color: var(--bg-color-1);
           border-radius: 8px;
+          flex-shrink: 0; /* Prevent from shrinking */
         }
 
         .post-content {
