@@ -33,10 +33,18 @@ function ToggleThemeButton() {
 }
 
 export function Navbar() {
+  const { isDarkMode } = useDarkMode()
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarLeft}>
-        <Link href='/list' className={styles.navbarBrand}>
+        <Link
+          href='/list'
+          className={cs(
+            styles.navbarBrand,
+            isDarkMode ? styles.darkModeTextColor : styles.lightModeTextColor
+          )}
+        >
           {siteConfig.name}
         </Link>
       </div>

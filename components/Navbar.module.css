@@ -20,12 +20,19 @@
   font-size: 1.25rem;
   font-weight: 700;
   text-decoration: none;
-  color: #000000;
   transition: color 0.15s ease;
 }
 
 .navbarBrand:hover {
   color: #888888;
+}
+
+.lightModeTextColor {
+  color: #000000;
+}
+
+.darkModeTextColor {
+  color: #ffffff;
 }
 
 /* Responsive Design */
