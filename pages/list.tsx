@@ -1,5 +1,3 @@
-
-import type { PageBlock } from 'notion-types'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
 import {
@@ -84,7 +82,7 @@ export const getStaticProps = async () => {
         )
         const tags = getPageProperty<string[]>('Tags', block, recordMap)
         const coverImage =
-          mapImageUrl((block as PageBlock).format?.page_cover, block) || null
+          mapImageUrl((block as any).format?.page_cover, block) || null
 
         posts.push({ id, title, publishedDate, description, tags, coverImage })
       }
@@ -101,13 +99,14 @@ export const getStaticProps = async () => {
   }
 }
 // The React component to render the list of posts.
-export default function ListPage({ posts, pageTitle, pageHeader }: ListPageProps) {
+export default function ListPage({
+  posts,
+  pageTitle,
+  pageHeader
+}: ListPageProps) {
   return (
-    // We can reuse the NotionPage component for a consistent layout,
-    // or create a completely new one. For simplicity, we'll add to it.
-    // A proper implementation might involve a new root component.
-    <div>
-      <header>
+    <div className='blog-container'>
+      <header className='blog-header'>
         <h1>{pageTitle}</h1>
         {pageHeader &&
           pageHeader.map((header, index) => (
@@ -118,11 +117,11 @@ export default function ListPage({ posts, pageTitle, pageHeader }: ListPageProps
       </header>
       <main>
         {posts?.length > 0 ? (
-          <ul>
+          <ul className='posts-list'>
             {posts.map((post) => (
-              <li key={post.id}>
+              <li key={post.id} className='post-item'>
                 <Link href={`/${post.id}`} legacyBehavior>
-                  <a>
+                  <a className='post-link'>
                     {post.coverImage && (
                       <div className='cover-image-wrapper'>
                         <Image
@@ -133,94 +132,195 @@ export default function ListPage({ posts, pageTitle, pageHeader }: ListPageProps
                         />
                       </div>
                     )}
-                    <div className='title'>{post.title}</div>
-                    {post.publishedDate && (
-                      <div className='date'>
-                        Published on{' '}
-                        {formatDate(post.publishedDate, { month: 'long' })}
-                      </div>
-                    )}
-                    {post.description && (
-                      <div className='description'>{post.description}</div>
-                    )}
-                    {post.tags && (
-                      <div className='tags'>
-                        {post.tags.map((tag) => (
-                          <span className='tag' key={tag}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    <div className='post-content'>
+                      <h2 className='post-title'>{post.title}</h2>
+                      {post.publishedDate && (
+                        <div className='post-date'>
+                          Published on{' '}
+                          {formatDate(post.publishedDate, { month: 'long' })}
+                        </div>
+                      )}
+                      {post.description && (
+                        <p className='post-description'>
+                          {post.description}
+                        </p>
+                      )}
+                      {post.tags && (
+                        <div className='post-tags'>
+                          {post.tags.map((tag) => (
+                            <span className='tag' key={tag}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </a>
                 </Link>
               </li>
             ))}
           </ul>
         ) : (
-          <p>No posts found.</p>
+          <p className='no-posts'>No posts found.</p>
         )}
       </main>
+
       <style jsx>{`
-        div {
+        .blog-container {
           max-width: 700px;
           margin: 0 auto;
           padding: 2rem;
-          font-family: sans-serif;
+          background-color: var(--bg-color);
+          color: var(--fg-color);
+          min-height: 100vh;
         }
-        ul {
+
+        .blog-header {
+          margin-bottom: 3rem;
+          padding-bottom: 2rem;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .blog-header h1 {
+          font-size: 2rem;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          margin-bottom: 0.75rem;
+          color: var(--fg-color);
+          line-height: 1.2;
+        }
+
+        .page-header {
+          margin: 0.5rem 0 0;
+          font-size: 1rem;
+          color: var(--fg-color-3);
+          line-height: 1.6;
+          letter-spacing: -0.01em;
+          font-weight: 400;
+        }
+
+        .posts-list {
           list-style: none;
           padding: 0;
+          margin: 0;
         }
-        li {
-          padding: 1.5rem 0;
-          border-bottom: 1px solid #eee;
+
+        .post-item {
+          padding: 2rem 0;
+          border-bottom: 1px solid var(--border-color);
+          transition: background-color 0.15s ease;
         }
-        li a {
+
+        .post-item:hover {
+          background-color: var(--bg-color-1);
+        }
+
+        .post-item:first-child {
+          padding-top: 0;
+        }
+
+        .post-link {
           text-decoration: none;
           color: inherit;
           display: block;
         }
-        li a:hover .title {
-          color: #0070f3;
-        }
-        .page-header {
-          margin: 1rem 0;
-          font-size: 1.1rem;
-          color: #555;
-        }
+
         .cover-image-wrapper {
           position: relative;
           width: 100%;
-          height: 200px; /* Adjust height as needed */
-          margin-bottom: 1rem;
+          height: 240px;
+          margin-bottom: 1.25rem;
+          overflow: hidden !important; /* Added !important */
+          border: 1px solid var(--border-color);
+          background-color: var(--bg-color-1);
           border-radius: 8px;
-          overflow: hidden;
         }
-        .title {
+
+        .post-content {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .post-title {
           font-size: 1.5rem;
           font-weight: 600;
-          margin-bottom: 0.5rem;
+          letter-spacing: -0.02em;
+          color: var(--fg-color);
+          transition: color 0.15s ease;
+          line-height: 1.3;
+          margin: 0;
         }
-        .date {
-          font-size: 0.9rem;
-          color: #666;
-          margin-bottom: 0.5rem;
+
+        .post-link:hover .post-title {
+          color: var(--fg-color-link-hover);
         }
-        .description {
-          margin-bottom: 1rem;
-          color: #444;
+
+        .post-date {
+          font-size: 0.813rem;
+          color: var(--fg-color-3);
+          font-weight: 400;
+          letter-spacing: 0.01em;
         }
-        .tags {
+
+        .post-description {
+          color: var(--fg-color-2);
+          line-height: 1.6;
+          letter-spacing: -0.01em;
+          font-size: 0.938rem;
+        }
+
+        .post-tags {
           display: flex;
-          gap: 0.5rem;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+          margin-top: 0.25rem;
         }
+
         .tag {
           display: inline-block;
-          padding: 0.25rem 0.5rem;
-          background: #eee;
-          border-radius: 4px;
-          font-size: 0.8rem;
+          padding: 0.25rem 0.75rem;
+          background: transparent;
+          border: 1px solid var(--border-color-2);
+          font-size: 0.75rem;
+          color: var(--fg-color-2);
+          font-weight: 500;
+          letter-spacing: 0.02em;
+          transition: all 0.15s ease;
+        }
+
+        .tag:hover {
+          border-color: var(--fg-color-link-hover);
+          color: var(--fg-color-link-hover);
+        }
+
+        .no-posts {
+          padding: 4rem 0;
+          text-align: center;
+          color: var(--fg-color-3);
+          font-size: 1rem;
+        }
+
+        @media (max-width: 640px) {
+          .blog-container {
+            padding: 1.5rem;
+          }
+
+          .blog-header h1 {
+            font-size: 1.75rem;
+          }
+
+          .page-header {
+            font-size: 0.938rem;
+          }
+
+          .post-title {
+            font-size: 1.25rem;
+          }
+
+          .cover-image-wrapper {
+            height: 180px;
+          }
         }
       `}</style>
     </div>

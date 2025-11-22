@@ -69,6 +69,7 @@
   overflow: hidden;
   border: 1px solid var(--border-color);
   background-color: var(--bg-color-1);
+  border-radius: 8px;
 }
 
 /* Post Content */
