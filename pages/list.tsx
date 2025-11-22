@@ -222,7 +222,6 @@ export default function ListPage({
         .blog-header {
           margin-bottom: 3rem;
           padding-bottom: 2rem;
-          border-bottom: 1px solid var(--border-color);
         }
 
         .blog-header h1 {
@@ -246,7 +245,8 @@ export default function ListPage({
         .sort-controls {
           display: flex;
           gap: 1rem;
-          margin: 2rem 0;
+          margin-top: 0.7rem;
+          margin-bottom: 0;
         }
 
         .sort-button {
@@ -274,7 +274,7 @@ export default function ListPage({
         .divider {
           border: 0;
           border-top: 1px solid var(--border-color);
-          margin: 0;
+          margin: 0.5rem 0 1rem 0;
         }
 
         .posts-list {
@@ -285,7 +285,6 @@ export default function ListPage({
 
         .post-item {
           padding: 2rem 0;
-          border-bottom: 1px solid var(--border-color);
           transition: background-color 0.15s ease;
         }
 

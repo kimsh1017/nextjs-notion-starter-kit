@@ -22,6 +22,14 @@ body {
   background-color: var(--bg-color); /* Add this line */
 }
 
+body.light-mode {
+  --border-color: #e0e0e0; /* A light grey for light mode */
+}
+
+body.dark-mode {
+  --border-color: #444444; /* A dark grey for dark mode */
+}
+
 .static-tweet blockquote {
   margin: 0;
   margin-block-start: 0;
