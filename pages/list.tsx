@@ -194,6 +194,7 @@ export default function ListPage({
                           alt={post.title}
                           layout='fill'
                           objectFit='cover'
+                          sizes='(max-width: 640px) 100vw, 360px'
                         />
                       </div>
                     )}
@@ -303,16 +304,13 @@ export default function ListPage({
 
         .cover-image-wrapper {
           position: relative;
-          width: 30%; /* Responsive width */
-          height: 0; /* Important for padding-bottom trick */
-          padding-bottom: 18%; /* Maintains 5:3 aspect ratio (120/200 * 30%) */
-          min-width: 100px; /* Minimum width for smaller screens */
+          width: 360px; /* Doubled width for larger screens */
+          height: 216px; /* Doubled height for larger screens (5:3 aspect ratio) */
           margin-left: 2rem;
           overflow: hidden !important;
           border: 1px solid var(--border-color);
           background-color: var(--bg-color-1);
           border-radius: 8px;
-          flex-shrink: 0;
         }
 
         .post-content {
@@ -403,6 +401,24 @@ export default function ListPage({
 
           .post-title {
             font-size: 1.25rem;
+          }
+
+          .post-link {
+            flex-direction: column; /* Stack image and text vertically */
+            min-height: auto; /* Remove min-height for stacked layout */
+          }
+
+          .post-content {
+            order: 1; /* Place content after image */
+            padding-left: 0; /* Remove specific padding for mobile if desired for full width */
+          }
+
+          .cover-image-wrapper {
+            order: 0; /* Place image before content */
+            width: 100%; /* Image takes full width */
+            height: 0;
+            padding-bottom: 60%; /* Maintain aspect ratio */
+            margin: 0 auto 1rem auto; /* Center image and add bottom margin */
           }
         }
       `}</style>
