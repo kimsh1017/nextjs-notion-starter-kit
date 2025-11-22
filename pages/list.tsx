@@ -168,14 +168,16 @@ export default function ListPage({
           </button>
         </div>
         <div className='search-input-container'>
-          <FaSearch className='search-icon' />
-          <input
-            type='text'
-            placeholder='Search posts...'
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className='search-input'
-          />
+          <div className='search-input-wrapper relative sm:block'>
+            <FaSearch className='search-icon absolute left-2.5 top-2.5 h-4 w-4 text-slate-400' />
+            <input
+              type='text'
+              placeholder='Search posts...'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
+            />
+          </div>
         </div>
       </div>
       <hr className='divider' />
@@ -285,26 +287,45 @@ export default function ListPage({
           /* margin-bottom: 0; Remove as handled by controls-wrapper */
         }
 
-        .search-input-container {
+        .controls-wrapper {
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          gap: 0.5rem; /* Space between icon and input */
+          margin-top: 0.43rem;
+          margin-bottom: 0;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .search-input-container {
+          /* No specific styles needed here anymore, as the wrapper handles it */
+        }
+
+        .search-input-wrapper {
+          position: relative;
+          /* hidden sm:block will be handled by utility classes directly on the div */
         }
 
         .search-icon {
-          color: var(--fg-color-2); /* Icon color */
-          font-size: 1.1rem; /* Icon size */
-          margin-left: 0.5rem;
+          color: var(--fg-color-2); /* Using existing fg-color-2 for icon color */
+          height: 1rem; /* h-4 */
+          width: 1rem; /* w-4 */
+          line-height: 1; /* top-2.5 approximately centers it */
         }
 
         .search-input {
-          padding: 0.5rem 1rem;
-          border: 1px solid var(--border-color); /* Use the global border color */
-          border-radius: 4px;
-          background-color: var(--search-bg-color); /* Use the new search background color */
-          color: var(--fg-color); /* Ensure text color contrasts with background */
-          flex-grow: 1; /* Allow input to grow */
-          min-width: 150px; /* Minimum width for input */
+          height: 2.25rem; /* h-9 */
+          width: 200px; /* w-[200px] */
+          padding-left: 2.25rem; /* pl-9 */
+          background-color: var(--search-bg-color); /* Maintain custom background */
+          border: 1px solid var(--border-color); /* border-slate-200, use existing border-color */
+          border-radius: 4px; /* default roundedness */
+          color: var(--fg-color);
+          /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
+        }
+
+        .search-input::placeholder {
+          color: var(--fg-color-3);
         }
 
         .search-input::placeholder {
