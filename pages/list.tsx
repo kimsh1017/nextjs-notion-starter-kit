@@ -194,7 +194,7 @@ export default function ListPage({
                           alt={post.title}
                           layout='fill'
                           objectFit='cover'
-                          sizes='(max-width: 640px) 100vw, 360px'
+                          sizes='(max-width: 640px) 100vw, 252px'
                         />
                       </div>
                     )}
@@ -304,8 +304,8 @@ export default function ListPage({
 
         .cover-image-wrapper {
           position: relative;
-          width: 360px; /* Doubled width for larger screens */
-          height: 216px; /* Doubled height for larger screens (5:3 aspect ratio) */
+          width: 252px; /* Reduced to 70% of 360px */
+          height: 151px; /* Reduced to 70% of 216px */
           margin-left: 2rem;
           overflow: hidden !important;
           border: 1px solid var(--border-color);
