@@ -245,7 +245,7 @@ export default function ListPage({
         .sort-controls {
           display: flex;
           gap: 1rem;
-          margin-top: 0.7rem;
+          margin-top: 0.43rem;
           margin-bottom: 0;
         }
 
