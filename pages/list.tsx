@@ -174,7 +174,6 @@ export default function ListPage({
             onChange={(e) => setSearchQuery(e.target.value)}
             className='search-input'
           />
-          <button className='search-button'>Search</button>
         </div>
       </div>
       <hr className='divider' />
@@ -301,22 +300,6 @@ export default function ListPage({
 
         .search-input::placeholder {
           color: var(--fg-color-3);
-        }
-
-        .search-button {
-          padding: 0.5rem 1rem;
-          background-color: var(--bg-color-1);
-          border: 1px solid var(--border-color-2);
-          color: var(--fg-color-2);
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .search-button:hover {
-          background-color: var(--bg-color-1);
-          border-color: var(--fg-color-link-hover);
-          color: var(--fg-color-link-hover);
         }
 
         .sort-button {
