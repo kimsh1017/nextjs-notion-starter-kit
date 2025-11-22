@@ -1,11 +1,7 @@
 import Image from 'next/legacy/image'
 import Link from 'next/link'
-import {
-  formatDate,
-  getBlockTitle,
-  getPageProperty,
-  getTextContent
-} from 'notion-utils'
+import { formatDate, getBlockTitle, getPageProperty, getTextContent } from 'notion-utils'
+import { useMemo, useState } from 'react'
 
 import type { PageProps } from '@/lib/types'
 import { Footer } from '@/components/Footer'
@@ -105,6 +101,27 @@ export default function ListPage({
   pageTitle,
   pageHeader
 }: ListPageProps) {
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest' | 'title'>(
+    'newest'
+  )
+
+  const sortedPosts = useMemo(() => {
+    const sorted = [...posts]
+    switch (sortOrder) {
+      case 'oldest':
+        sorted.sort((a, b) => (a.publishedDate || 0) - (b.publishedDate || 0))
+        break
+      case 'title':
+        sorted.sort((a, b) => a.title.localeCompare(b.title))
+        break
+      default:
+        // Already sorted by newest in getStaticProps, but we can re-sort to be safe
+        sorted.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
+        break
+    }
+    return sorted
+  }, [posts, sortOrder])
+
   return (
     <div className='blog-container'>
       <header className='blog-header'>
@@ -115,16 +132,32 @@ export default function ListPage({
               {header}
             </p>
           ))}
-      <div className='sort-controls'>
-          <button className='sort-button active'>Newest</button>
-          <button className='sort-button'>Oldest</button>
-          <button className='sort-button'>Title</button>
-        </div>
       </header>
+      <div className='sort-controls'>
+        <button
+          className={`sort-button ${sortOrder === 'newest' ? 'active' : ''}`}
+          onClick={() => setSortOrder('newest')}
+        >
+          Newest
+        </button>
+        <button
+          className={`sort-button ${sortOrder === 'oldest' ? 'active' : ''}`}
+          onClick={() => setSortOrder('oldest')}
+        >
+          Oldest
+        </button>
+        <button
+          className={`sort-button ${sortOrder === 'title' ? 'active' : ''}`}
+          onClick={() => setSortOrder('title')}
+        >
+          Title
+        </button>
+      </div>
+      <hr className='divider' />
       <main>
-        {posts?.length > 0 ? (
+        {sortedPosts?.length > 0 ? (
           <ul className='posts-list'>
-            {posts.map((post) => (
+            {sortedPosts.map((post) => (
               <li key={post.id} className='post-item'>
                 <Link href={`/${post.id}`} legacyBehavior>
                   <a className='post-link'>
@@ -236,6 +269,12 @@ export default function ListPage({
           font-weight: bold;
           text-decoration: underline;
           text-underline-offset: 4px;
+        }
+
+        .divider {
+          border: 0;
+          border-top: 1px solid var(--border-color);
+          margin: 0;
         }
 
         .posts-list {
