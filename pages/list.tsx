@@ -8,6 +8,7 @@ import {
 } from 'notion-utils'
 
 import type { PageProps } from '@/lib/types'
+import { Footer } from '@/components/Footer'
 import { rootNotionPageId } from '@/lib/config'
 import { mapImageUrl } from '@/lib/map-image-url'
 import { getPage } from '@/lib/notion'
@@ -164,6 +165,8 @@ export default function ListPage({
           <p className='no-posts'>No posts found.</p>
         )}
       </main>
+
+      <Footer />
 
       <style jsx>{`
         .blog-container {
