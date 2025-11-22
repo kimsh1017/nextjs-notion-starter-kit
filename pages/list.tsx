@@ -303,13 +303,16 @@ export default function ListPage({
 
         .cover-image-wrapper {
           position: relative;
-          width: 200px;
-          height: 120px; /* Changed from 100% to fixed px height */
+          width: 30%; /* Responsive width */
+          height: 0; /* Important for padding-bottom trick */
+          padding-bottom: 18%; /* Maintains 5:3 aspect ratio (120/200 * 30%) */
+          min-width: 100px; /* Minimum width for smaller screens */
           margin-left: 2rem;
           overflow: hidden !important;
           border: 1px solid var(--border-color);
           background-color: var(--bg-color-1);
           border-radius: 8px;
+          flex-shrink: 0;
         }
 
         .post-content {
