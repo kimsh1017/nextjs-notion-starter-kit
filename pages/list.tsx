@@ -2,6 +2,7 @@ import Image from 'next/legacy/image'
 import Link from 'next/link'
 import { formatDate, getBlockTitle, getPageProperty, getTextContent } from 'notion-utils'
 import { useMemo, useState } from 'react'
+import { FaSearch } from 'react-icons/fa'
 
 import type { PageProps } from '@/lib/types'
 import { Footer } from '@/components/Footer'
@@ -167,6 +168,7 @@ export default function ListPage({
           </button>
         </div>
         <div className='search-input-container'>
+          <FaSearch className='search-icon' />
           <input
             type='text'
             placeholder='Search posts...'
@@ -285,15 +287,22 @@ export default function ListPage({
 
         .search-input-container {
           display: flex;
-          gap: 0.5rem;
+          align-items: center;
+          gap: 0.5rem; /* Space between icon and input */
+        }
+
+        .search-icon {
+          color: var(--fg-color-2); /* Icon color */
+          font-size: 1.1rem; /* Icon size */
+          margin-left: 0.5rem;
         }
 
         .search-input {
           padding: 0.5rem 1rem;
-          border: 1px solid var(--border-color-2);
+          border: 1px solid var(--border-color); /* Use the global border color */
           border-radius: 4px;
-          background-color: var(--bg-color);
-          color: var(--fg-color);
+          background-color: var(--search-bg-color); /* Use the new search background color */
+          color: var(--fg-color); /* Ensure text color contrasts with background */
           flex-grow: 1; /* Allow input to grow */
           min-width: 150px; /* Minimum width for input */
         }

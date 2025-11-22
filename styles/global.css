@@ -28,10 +28,12 @@ body {
 
 body.light-mode {
   --border-color: #e0e0e0; /* A light grey for light mode */
+  --search-bg-color: #f5f5f5; /* Slightly lighter than main bg for light mode */
 }
 
 body.dark-mode {
   --border-color: #444444; /* A dark grey for dark mode */
+  --search-bg-color: #333333; /* Slightly darker than main bg for dark mode */
 }
 
 .static-tweet blockquote {
