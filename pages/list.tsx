@@ -167,7 +167,7 @@ export default function ListPage({
 
       <style jsx>{`
         .blog-container {
-          max-width: 700px;
+          max-width: 1140px;
           margin: 0 auto;
           padding: 2rem;
           background-color: var(--bg-color);
