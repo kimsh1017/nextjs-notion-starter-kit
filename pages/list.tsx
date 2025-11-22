@@ -284,7 +284,7 @@ export default function ListPage({
         }
 
         .post-item {
-          padding: 2rem 0;
+          padding: 0.75rem 0;
           transition: background-color 0.15s ease;
         }
 
@@ -292,22 +292,19 @@ export default function ListPage({
           background-color: var(--bg-color-1);
         }
 
-        .post-item:first-child {
-          padding-top: 0;
-        }
-
         .post-link {
           text-decoration: none;
           color: inherit;
           display: flex;
-          align-items: center;
+          align-items: stretch; /* Changed from center to stretch */
           justify-content: space-between;
+          min-height: 150px;
         }
 
         .cover-image-wrapper {
           position: relative;
-          width: 150px;
-          height: 100px;
+          width: 200px;
+          height: 120px; /* Changed from 100% to fixed px height */
           margin-left: 2rem;
           overflow: hidden !important;
           border: 1px solid var(--border-color);
@@ -319,19 +316,20 @@ export default function ListPage({
           flex-grow: 1;
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: 0.5rem;
+          padding-left: 0.75rem;
         }
         .post-footer {
           display: flex;
           align-items: center;
           gap: 1rem;
-          margin-top: 1rem;
+          margin-top: 0.75rem;
         }
 
         .post-title {
           font-size: 1.5rem;
           font-weight: 600;
-          letter-spacing: -0.02em;
+          letter-spacing: normal;
           color: var(--fg-color);
           transition: color 0.15s ease;
           line-height: 1.3;
@@ -352,7 +350,7 @@ export default function ListPage({
         .post-description {
           color: var(--fg-color-2);
           line-height: 1.6;
-          letter-spacing: -0.01em;
+          letter-spacing: normal;
           font-size: 0.938rem;
         }
 
@@ -365,7 +363,7 @@ export default function ListPage({
 
         .tag {
           display: inline-block;
-          padding: 0.25rem 0.75rem;
+          padding: 0.25rem 0;
           background: transparent;
           border: 1px solid var(--border-color-2);
           font-size: 0.75rem;
@@ -402,10 +400,6 @@ export default function ListPage({
 
           .post-title {
             font-size: 1.25rem;
-          }
-
-          .cover-image-wrapper {
-            height: 180px;
           }
         }
       `}</style>
