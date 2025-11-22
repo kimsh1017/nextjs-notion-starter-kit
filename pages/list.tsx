@@ -104,9 +104,22 @@ export default function ListPage({
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest' | 'title'>(
     'newest'
   )
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const sortedPosts = useMemo(() => {
-    const sorted = [...posts]
+  const sortedAndFilteredPosts = useMemo(() => {
+    let filtered = posts;
+
+    if (searchQuery) {
+      const lowerCaseQuery = searchQuery.toLowerCase();
+      filtered = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(lowerCaseQuery) ||
+          post.description?.toLowerCase().includes(lowerCaseQuery) ||
+          post.tags?.some((tag) => tag.toLowerCase().includes(lowerCaseQuery))
+      );
+    }
+
+    const sorted = [...filtered]
     switch (sortOrder) {
       case 'oldest':
         sorted.sort((a, b) => (a.publishedDate || 0) - (b.publishedDate || 0))
@@ -115,12 +128,11 @@ export default function ListPage({
         sorted.sort((a, b) => a.title.localeCompare(b.title))
         break
       default:
-        // Already sorted by newest in getStaticProps, but we can re-sort to be safe
         sorted.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
         break
     }
     return sorted
-  }, [posts, sortOrder])
+  }, [posts, sortOrder, searchQuery])
 
   return (
     <div className='blog-container'>
@@ -133,31 +145,43 @@ export default function ListPage({
             </p>
           ))}
       </header>
-      <div className='sort-controls'>
-        <button
-          className={`sort-button ${sortOrder === 'newest' ? 'active' : ''}`}
-          onClick={() => setSortOrder('newest')}
-        >
-          Newest
-        </button>
-        <button
-          className={`sort-button ${sortOrder === 'oldest' ? 'active' : ''}`}
-          onClick={() => setSortOrder('oldest')}
-        >
-          Oldest
-        </button>
-        <button
-          className={`sort-button ${sortOrder === 'title' ? 'active' : ''}`}
-          onClick={() => setSortOrder('title')}
-        >
-          Title
-        </button>
+      <div className='controls-wrapper'>
+        <div className='sort-controls'>
+          <button
+            className={`sort-button ${sortOrder === 'newest' ? 'active' : ''}`}
+            onClick={() => setSortOrder('newest')}
+          >
+            Newest
+          </button>
+          <button
+            className={`sort-button ${sortOrder === 'oldest' ? 'active' : ''}`}
+            onClick={() => setSortOrder('oldest')}
+          >
+            Oldest
+          </button>
+          <button
+            className={`sort-button ${sortOrder === 'title' ? 'active' : ''}`}
+            onClick={() => setSortOrder('title')}
+          >
+            Title
+          </button>
+        </div>
+        <div className='search-input-container'>
+          <input
+            type='text'
+            placeholder='Search posts...'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className='search-input'
+          />
+          <button className='search-button'>Search</button>
+        </div>
       </div>
       <hr className='divider' />
       <main>
-        {sortedPosts?.length > 0 ? (
+        {sortedAndFilteredPosts?.length > 0 ? (
           <ul className='posts-list'>
-            {sortedPosts.map((post) => (
+            {sortedAndFilteredPosts.map((post) => (
               <li key={post.id} className='post-item'>
                 <Link href={`/${post.id}`} legacyBehavior>
                   <a className='post-link'>
@@ -243,11 +267,56 @@ export default function ListPage({
           font-weight: 400;
         }
 
+        .controls-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 0.43rem;
+          margin-bottom: 0;
+          gap: 1rem; /* Add some gap between sort controls and search input */
+          flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
         .sort-controls {
           display: flex;
           gap: 1rem;
-          margin-top: 0.43rem;
-          margin-bottom: 0;
+          /* margin-top: 0.43rem; Remove as handled by controls-wrapper */
+          /* margin-bottom: 0; Remove as handled by controls-wrapper */
+        }
+
+        .search-input-container {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .search-input {
+          padding: 0.5rem 1rem;
+          border: 1px solid var(--border-color-2);
+          border-radius: 4px;
+          background-color: var(--bg-color);
+          color: var(--fg-color);
+          flex-grow: 1; /* Allow input to grow */
+          min-width: 150px; /* Minimum width for input */
+        }
+
+        .search-input::placeholder {
+          color: var(--fg-color-3);
+        }
+
+        .search-button {
+          padding: 0.5rem 1rem;
+          background-color: var(--bg-color-1);
+          border: 1px solid var(--border-color-2);
+          color: var(--fg-color-2);
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .search-button:hover {
+          background-color: var(--bg-color-1);
+          border-color: var(--fg-color-link-hover);
+          color: var(--fg-color-link-hover);
         }
 
         .sort-button {
