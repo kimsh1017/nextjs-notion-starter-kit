@@ -319,6 +319,9 @@ export default function ListPage({
           border-radius: 4px;
           cursor: pointer;
           transition: all 0.2s ease;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .tag-filter-select:hover {
