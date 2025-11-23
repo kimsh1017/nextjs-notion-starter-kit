@@ -134,7 +134,7 @@ export default function ListPage({
             className='sort-button'
             onClick={toggleSortOrder}
           >
-            <span className='sort-button-text'>{sortOrder === 'newest' ? 'Newest' : 'Oldest'}</span>
+            <span className='sort-button-text'>{'최신순'}</span>
             <span style={{ marginLeft: '0.5em' }}>
               {sortOrder === 'newest' ? '↓' : '↑'}
             </span>
