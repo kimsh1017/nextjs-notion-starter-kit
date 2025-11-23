@@ -38,13 +38,19 @@ function ToggleThemeButton() {
 }
 
 export function Navbar() {
+  const [hasMounted, setHasMounted] = React.useState(false)
   const { isDarkMode } = useDarkMode()
+
+  React.useEffect(() => {
+    setHasMounted(true)
+  }, [])
 
   return (
     <nav
       className={cs(
         styles.navbar,
-        isDarkMode ? styles.darkModeBorder : styles.lightModeBorder
+        hasMounted &&
+          (isDarkMode ? styles.darkModeBorder : styles.lightModeBorder)
       )}
     >
       <div className={styles.navbarContent}>
@@ -53,7 +59,10 @@ export function Navbar() {
             href='/list'
             className={cs(
               styles.navbarBrand,
-              isDarkMode ? styles.darkModeTextColor : styles.lightModeTextColor
+              hasMounted &&
+                (isDarkMode
+                  ? styles.darkModeTextColor
+                  : styles.lightModeTextColor)
             )}
           >
             {siteConfig.name}
