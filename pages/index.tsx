@@ -240,7 +240,7 @@ export default function ListPage({
         .page-header {
           margin: 0.5rem 0 0;
           font-size: 1rem;
-          color: var(--fg-color-3);
+          color: var(--fg-color-2);
           line-height: 1.6;
           letter-spacing: -0.01em;
           font-weight: 400;
