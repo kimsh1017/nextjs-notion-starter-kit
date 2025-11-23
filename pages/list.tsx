@@ -2,7 +2,8 @@ import Image from 'next/legacy/image'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
-import { getBlockTitle, formatDate } from 'notion-utils'
+import { getBlockTitle } from 'notion-utils'
+import { formatDate } from '@/lib/format-date'
 
 import { Footer } from '@/components/Footer'
 import { rootNotionPageId } from '@/lib/config'
@@ -184,9 +185,7 @@ export default function ListPage({
                         )}
                         {post.publishedDate && (
                           <div className='post-date'>
-                            {formatDate(post.publishedDate, {
-                              month: 'long'
-                            })}
+                            {formatDate(post.publishedDate)}
                           </div>
                         )}
                       </div>
