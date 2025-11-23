@@ -129,12 +129,6 @@ export default function ListPage({
           ))}
       </header>
       <div className='controls-wrapper'>
-        <button className='sort-button' onClick={toggleSortOrder}>
-          <span className='sort-button-text'>{'최신순'}</span>
-          <span style={{ marginLeft: '0.5em' }}>
-            {sortOrder === 'newest' ? '↓' : '↑'}
-          </span>
-        </button>
         <select
           className='tag-filter-select'
           value={selectedTag}
@@ -156,6 +150,12 @@ export default function ListPage({
             className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
           />
         </div>
+        <button className='sort-button' onClick={toggleSortOrder}>
+          <span className='sort-button-text'>{'최신순'}</span>
+          <span style={{ marginLeft: '0.5em' }}>
+            {sortOrder === 'newest' ? '↓' : '↑'}
+          </span>
+        </button>
       </div>
       <hr className='divider' />
       <main>
@@ -271,7 +271,7 @@ export default function ListPage({
 
         .search-input {
           height: 42px; /* Set explicit height to match other controls */
-          width: 200px; /* w-[200px] */
+          width: 300px; /* w-[200px] */
           padding: 0.5rem 1rem 0.5rem 2.5rem; /* Adjust padding to center text and make space for icon */
           background-color: var(
             --search-bg-color
@@ -306,6 +306,7 @@ export default function ListPage({
         }
 
         .tag-filter-select {
+          width: 150px;
           appearance: none;
           padding: 0.5rem 2.5rem 0.5rem 1rem;
           background-image: var(--dropdown-arrow);
@@ -495,8 +496,11 @@ export default function ListPage({
             width: 100px; /* Reduce width further */
             padding: 0.5rem 1rem; /* Adjust padding for smaller width */
           }
+          .search-input-wrapper {
+            flex-grow: 1;
+          }
           .search-input {
-            width: 70%;
+            width: 100%;
           }
           /* .search-input and .search-icon revert to desktop styles */
         }
