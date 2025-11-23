@@ -501,7 +501,7 @@ export default function ListPage({
           }
           .tag-filter-select {
             width: 100px; /* Reduce width further */
-            padding: 0.5rem 1rem; /* Adjust padding for smaller width */
+            padding: 0.5rem 2.5rem 0.5rem 1rem; /* Adjust padding for smaller width */
           }
           .search-input-wrapper {
             flex-grow: 1;
