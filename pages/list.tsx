@@ -134,7 +134,7 @@ export default function ListPage({
             className='sort-button'
             onClick={toggleSortOrder}
           >
-            {sortOrder === 'newest' ? 'Newest' : 'Oldest'}
+            <span className='sort-button-text'>{sortOrder === 'newest' ? 'Newest' : 'Oldest'}</span>
             <span style={{ marginLeft: '0.5em' }}>
               {sortOrder === 'newest' ? '↓' : '↑'}
             </span>
@@ -502,6 +502,24 @@ export default function ListPage({
             padding-bottom: 60%; /* Maintain aspect ratio */
             margin: 0 auto 1rem auto; /* Center image and add bottom margin */
           }
+          .controls-wrapper {
+            justify-content: flex-start; /* Left align */
+          }
+          .sort-controls {
+            gap: 0.5rem; /* Reduce gap between sort button and tag select */
+          }
+          .sort-button {
+            width: 44px; /* Make it a small square */
+            padding: 0.5rem; /* Adjust padding for square button */
+          }
+          .sort-button-text {
+            display: none; /* Hide text */
+          }
+          .tag-filter-select {
+            width: 100px; /* Reduce width further */
+            padding: 0.5rem 1rem; /* Adjust padding for smaller width */
+          }
+          /* .search-input and .search-icon revert to desktop styles */
         }
       `}</style>
     </div>
