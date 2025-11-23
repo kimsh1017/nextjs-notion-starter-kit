@@ -102,22 +102,24 @@ export default function ListPage({
   pageTitle,
   pageHeader
 }: ListPageProps) {
-  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest' | 'title'>(
-    'newest'
-  )
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
   const [searchQuery, setSearchQuery] = useState('')
 
+  const toggleSortOrder = () => {
+    setSortOrder(current => current === 'newest' ? 'oldest' : 'newest')
+  }
+
   const sortedAndFilteredPosts = useMemo(() => {
-    let filtered = posts;
+    let filtered = posts
 
     if (searchQuery) {
-      const lowerCaseQuery = searchQuery.toLowerCase();
+      const lowerCaseQuery = searchQuery.toLowerCase()
       filtered = posts.filter(
-        (post) =>
+        post =>
           post.title.toLowerCase().includes(lowerCaseQuery) ||
           post.description?.toLowerCase().includes(lowerCaseQuery) ||
-          post.tags?.some((tag) => tag.toLowerCase().includes(lowerCaseQuery))
-      );
+          post.tags?.some(tag => tag.toLowerCase().includes(lowerCaseQuery))
+      )
     }
 
     const sorted = [...filtered]
@@ -125,7 +127,7 @@ export default function ListPage({
       case 'oldest':
         sorted.sort((a, b) => (a.publishedDate || 0) - (b.publishedDate || 0))
         break
-      default:
+      default: // newest
         sorted.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
         break
     }
@@ -146,16 +148,13 @@ export default function ListPage({
       <div className='controls-wrapper'>
         <div className='sort-controls'>
           <button
-            className={`sort-button ${sortOrder === 'newest' ? 'active' : ''}`}
-            onClick={() => setSortOrder('newest')}
+            className='sort-button'
+            onClick={toggleSortOrder}
           >
-            Newest
-          </button>
-          <button
-            className={`sort-button ${sortOrder === 'oldest' ? 'active' : ''}`}
-            onClick={() => setSortOrder('oldest')}
-          >
-            Oldest
+            {sortOrder === 'newest' ? 'Newest' : 'Oldest'}
+            <span style={{ marginLeft: '0.5em' }}>
+              {sortOrder === 'newest' ? '↓' : '↑'}
+            </span>
           </button>
         </div>
         <div className='search-input-container'>
@@ -337,12 +336,6 @@ export default function ListPage({
           background-color: var(--bg-color-1);
           border-color: var(--fg-color-link-hover);
           color: var(--fg-color-link-hover);
-        }
-
-        .sort-button.active {
-          font-weight: bold;
-          text-decoration: underline;
-          text-underline-offset: 4px;
         }
 
         .divider {
