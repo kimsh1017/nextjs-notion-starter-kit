@@ -24,16 +24,37 @@ body {
   font-family: var(--notion-font);
   overflow-x: hidden;
   background-color: var(--bg-color); /* Add this line */
+
+  --dropdown-arrow-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  --dropdown-arrow-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
 }
 
 body.light-mode {
+  --dropdown-arrow: var(--dropdown-arrow-light);
+  --fg-color: #374151; /* text-gray-700 */
+  --fg-color-1: #4b5563; /* text-gray-600 */
+  --fg-color-2: #6b7280; /* text-gray-500 */
+  --fg-color-3: #9ca3af; /* text-gray-400 */
+  --fg-color-link-hover: #1e40af; /* blue-700 */
+
   --border-color: #e0e0e0; /* A light grey for light mode */
+  --border-color-2: #d1d5db; /* gray-300 */
   --search-bg-color: #f5f5f5; /* Slightly lighter than main bg for light mode */
+  --bg-color-1: #f9fafb; /* gray-50 */
 }
 
 body.dark-mode {
+  --dropdown-arrow: var(--dropdown-arrow-dark);
+  --fg-color: #e5e7eb; /* text-gray-200 */
+  --fg-color-1: #d1d5db; /* text-gray-300 */
+  --fg-color-2: #ffffff; /* White color for dark mode arrow */
+  --fg-color-3: #6b7280; /* text-gray-500 */
+  --fg-color-link-hover: #93c5fd; /* blue-300 */
+
   --border-color: #444444; /* A dark grey for dark mode */
+  --border-color-2: #4b5563; /* gray-700 */
   --search-bg-color: #333333; /* Slightly darker than main bg for dark mode */
+  --bg-color-1: #374151; /* gray-700 */
 }
 
 .static-tweet blockquote {
