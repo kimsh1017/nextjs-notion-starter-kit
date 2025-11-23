@@ -104,17 +104,36 @@ export default function ListPage({
 }: ListPageProps) {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedTag, setSelectedTag] = useState<string>('All')
 
   const toggleSortOrder = () => {
     setSortOrder(current => current === 'newest' ? 'oldest' : 'newest')
   }
 
+  const uniqueTags = useMemo(() => {
+    const tags = new Set<string>()
+    for (const post of posts) {
+      if (post.tags) {
+        for (const tag of post.tags) {
+          tags.add(tag)
+        }
+      }
+    }
+    return ['All', ...Array.from(tags)]
+  }, [posts])
+
   const sortedAndFilteredPosts = useMemo(() => {
     let filtered = posts
 
+    if (selectedTag !== 'All') {
+      filtered = filtered.filter(
+        post => post.tags && post.tags.includes(selectedTag)
+      )
+    }
+
     if (searchQuery) {
       const lowerCaseQuery = searchQuery.toLowerCase()
-      filtered = posts.filter(
+      filtered = filtered.filter(
         post =>
           post.title.toLowerCase().includes(lowerCaseQuery) ||
           post.description?.toLowerCase().includes(lowerCaseQuery) ||
@@ -132,7 +151,7 @@ export default function ListPage({
         break
     }
     return sorted
-  }, [posts, sortOrder, searchQuery])
+  }, [posts, sortOrder, searchQuery, selectedTag])
 
   return (
     <div className='blog-container'>
@@ -156,6 +175,17 @@ export default function ListPage({
               {sortOrder === 'newest' ? '↓' : '↑'}
             </span>
           </button>
+          <select
+            className='tag-filter-select'
+            value={selectedTag}
+            onChange={(e) => setSelectedTag(e.target.value)}
+          >
+            {uniqueTags.map((tag) => (
+              <option key={tag} value={tag}>
+                {tag}
+              </option>
+            ))}
+          </select>
         </div>
         <div className='search-input-container'>
           <div className='search-input-wrapper relative sm:block'>
@@ -333,6 +363,22 @@ export default function ListPage({
         }
 
         .sort-button:hover {
+          background-color: var(--bg-color-1);
+          border-color: var(--fg-color-link-hover);
+          color: var(--fg-color-link-hover);
+        }
+
+        .tag-filter-select {
+          padding: 0.5rem 1rem;
+          background-color: transparent;
+          border: 1px solid var(--border-color-2);
+          color: var(--fg-color-2);
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .tag-filter-select:hover {
           background-color: var(--bg-color-1);
           border-color: var(--fg-color-link-hover);
           color: var(--fg-color-link-hover);
