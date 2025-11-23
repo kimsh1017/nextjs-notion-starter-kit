@@ -25,6 +25,7 @@ interface ListPageProps extends PageProps {
   posts: Post[]
   pageTitle: string
   pageHeader?: string[]
+  uniqueTags: string[]
 }
 
 export const getStaticProps = async () => {
@@ -87,10 +88,24 @@ export const getStaticProps = async () => {
     }
   }
 
-  // Sort posts by date
-  posts.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
+  const props = {
+    posts,
+    pageTitle,
+    pageHeader,
+    uniqueTags: [] as string[]
+  }
 
-  const props = { posts, pageTitle, pageHeader }
+  const collection = Object.values(recordMap.collection)[0]?.value
+  if (collection) {
+    const schema = collection.schema
+    const tagsProperty = Object.values(schema).find(
+      p => p.name === 'Tags' && p.type === 'multi_select'
+    )
+    if (tagsProperty && tagsProperty.options) {
+      props.uniqueTags = ['All', ...tagsProperty.options.map(o => o.value)]
+    }
+  }
+
   return {
     props,
     revalidate: 10
@@ -100,7 +115,8 @@ export const getStaticProps = async () => {
 export default function ListPage({
   posts,
   pageTitle,
-  pageHeader
+  pageHeader,
+  uniqueTags
 }: ListPageProps) {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
   const [searchQuery, setSearchQuery] = useState('')
@@ -109,18 +125,6 @@ export default function ListPage({
   const toggleSortOrder = () => {
     setSortOrder(current => current === 'newest' ? 'oldest' : 'newest')
   }
-
-  const uniqueTags = useMemo(() => {
-    const tags = new Set<string>()
-    for (const post of posts) {
-      if (post.tags) {
-        for (const tag of post.tags) {
-          tags.add(tag)
-        }
-      }
-    }
-    return ['All', ...Array.from(tags)]
-  }, [posts])
 
   const sortedAndFilteredPosts = useMemo(() => {
     let filtered = posts
