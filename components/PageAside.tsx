@@ -15,4 +15,3 @@ export function PageAside({
 
   return <PageSocial />
 }
-

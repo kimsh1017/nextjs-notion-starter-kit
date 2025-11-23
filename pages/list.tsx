@@ -59,10 +59,10 @@ export const getStaticProps = async () => {
   if (collection) {
     const schema = collection.schema
     const tagsProperty = Object.values(schema).find(
-      p => p.name === 'Tags' && p.type === 'multi_select'
+      (p) => p.name === 'Tags' && p.type === 'multi_select'
     )
     if (tagsProperty && tagsProperty.options) {
-      props.uniqueTags = ['All', ...tagsProperty.options.map(o => o.value)]
+      props.uniqueTags = ['All', ...tagsProperty.options.map((o) => o.value)]
     }
   }
 
@@ -83,7 +83,7 @@ export default function ListPage({
   const [selectedTag, setSelectedTag] = useState<string>('All')
 
   const toggleSortOrder = () => {
-    setSortOrder(current => current === 'newest' ? 'oldest' : 'newest')
+    setSortOrder((current) => (current === 'newest' ? 'oldest' : 'newest'))
   }
 
   const sortedAndFilteredPosts = useMemo(() => {
@@ -91,17 +91,17 @@ export default function ListPage({
 
     if (selectedTag !== 'All') {
       filtered = filtered.filter(
-        post => post.tags && post.tags.includes(selectedTag)
+        (post) => post.tags && post.tags.includes(selectedTag)
       )
     }
 
     if (searchQuery) {
       const lowerCaseQuery = searchQuery.toLowerCase()
       filtered = filtered.filter(
-        post =>
+        (post) =>
           post.title.toLowerCase().includes(lowerCaseQuery) ||
           post.description?.toLowerCase().includes(lowerCaseQuery) ||
-          post.tags?.some(tag => tag.toLowerCase().includes(lowerCaseQuery))
+          post.tags?.some((tag) => tag.toLowerCase().includes(lowerCaseQuery))
       )
     }
 
@@ -129,39 +129,32 @@ export default function ListPage({
           ))}
       </header>
       <div className='controls-wrapper'>
-        <div className='sort-controls'>
-          <button
-            className='sort-button'
-            onClick={toggleSortOrder}
-          >
-            <span className='sort-button-text'>{'최신순'}</span>
-            <span style={{ marginLeft: '0.5em' }}>
-              {sortOrder === 'newest' ? '↓' : '↑'}
-            </span>
-          </button>
-          <select
-            className='tag-filter-select'
-            value={selectedTag}
-            onChange={(e) => setSelectedTag(e.target.value)}
-          >
-            {uniqueTags.map((tag) => (
-              <option key={tag} value={tag}>
-                {tag}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className='search-input-container'>
-          <div className='search-input-wrapper relative sm:block'>
-            <FaSearch className='search-icon absolute left-2.5 top-[13px] h-4 w-4 text-slate-400' />
-            <input
-              type='text'
-              placeholder='Search posts...'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
-            />
-          </div>
+        <button className='sort-button' onClick={toggleSortOrder}>
+          <span className='sort-button-text'>{'최신순'}</span>
+          <span style={{ marginLeft: '0.5em' }}>
+            {sortOrder === 'newest' ? '↓' : '↑'}
+          </span>
+        </button>
+        <select
+          className='tag-filter-select'
+          value={selectedTag}
+          onChange={(e) => setSelectedTag(e.target.value)}
+        >
+          {uniqueTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
+        <div className='search-input-wrapper relative sm:block'>
+          <FaSearch className='search-icon absolute left-2.5 top-[13px] h-4 w-4 text-slate-400' />
+          <input
+            type='text'
+            placeholder='Search'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
+          />
         </div>
       </div>
       <hr className='divider' />
@@ -175,9 +168,7 @@ export default function ListPage({
                     <div className='post-content'>
                       <h2 className='post-title'>{post.title}</h2>
                       {post.description && (
-                        <p className='post-description'>
-                          {post.description}
-                        </p>
+                        <p className='post-description'>{post.description}</p>
                       )}
                       <div className='post-footer'>
                         {post.tags && (
@@ -256,33 +247,12 @@ export default function ListPage({
 
         .controls-wrapper {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-start; /* Changed from space-between */
           align-items: center;
           margin-top: 0.43rem;
           margin-bottom: 0;
-          gap: 1rem; /* Add some gap between sort controls and search input */
+          gap: 0.5rem; /* Changed from 1rem */
           flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        }
-
-        .sort-controls {
-          display: flex;
-          gap: 1rem;
-          /* margin-top: 0.43rem; Remove as handled by controls-wrapper */
-          /* margin-bottom: 0; Remove as handled by controls-wrapper */
-        }
-
-        .controls-wrapper {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-top: 0.43rem;
-          margin-bottom: 0;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-
-        .search-input-container {
-          /* No specific styles needed here anymore, as the wrapper handles it */
         }
 
         .search-input-wrapper {
@@ -291,22 +261,27 @@ export default function ListPage({
         }
 
         .search-icon {
-          color: var(--fg-color-2); /* Using existing fg-color-2 for icon color */
+          color: var(
+            --fg-color-2
+          ); /* Using existing fg-color-2 for icon color */
           height: 1rem; /* h-4 */
           width: 1rem; /* w-4 */
           line-height: 1; /* top-2.5 approximately centers it */
         }
 
-                            .search-input {
-                              height: 42px; /* Set explicit height to match other controls */
-                              width: 200px; /* w-[200px] */
-                              padding: 0.5rem 1rem 0.5rem 2.5rem; /* Adjust padding to center text and make space for icon */
-                              background-color: var(--search-bg-color); /* Maintain custom background */
-                              border: 1px solid var(--border-color); /* border-slate-200, use existing border-color */
-                              border-radius: 4px; /* default roundedness */
-                              color: var(--fg-color);
-                              /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
-                            }        .search-input::placeholder {
+        .search-input {
+          height: 42px; /* Set explicit height to match other controls */
+          width: 200px; /* w-[200px] */
+          padding: 0.5rem 1rem 0.5rem 2.5rem; /* Adjust padding to center text and make space for icon */
+          background-color: var(
+            --search-bg-color
+          ); /* Maintain custom background */
+          border: 1px solid var(--border-color); /* border-slate-200, use existing border-color */
+          border-radius: 4px; /* default roundedness */
+          color: var(--fg-color);
+          /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
+        }
+        .search-input::placeholder {
           color: var(--fg-color-3);
         }
 
@@ -501,9 +476,7 @@ export default function ListPage({
           }
           .controls-wrapper {
             justify-content: flex-start; /* Left align */
-          }
-          .sort-controls {
-            gap: 0.5rem; /* Reduce gap between sort button and tag select */
+            gap: 0.5rem;
           }
           .sort-button {
             /* width: 44px; / Make it a small square */
@@ -521,6 +494,9 @@ export default function ListPage({
           .tag-filter-select {
             width: 100px; /* Reduce width further */
             padding: 0.5rem 1rem; /* Adjust padding for smaller width */
+          }
+          .search-input {
+            width: 70%;
           }
           /* .search-input and .search-icon revert to desktop styles */
         }

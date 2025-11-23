@@ -13,7 +13,6 @@ interface SocialLink {
 }
 
 const socialLinks: SocialLink[] = [
-
   config.newsletter && {
     name: 'newsletter',
     href: `${config.newsletter}`,
