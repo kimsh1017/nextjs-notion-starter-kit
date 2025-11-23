@@ -56,7 +56,7 @@ export function Navbar() {
       <div className={styles.navbarContent}>
         <div className={styles.navbarLeft}>
           <Link
-            href='/list'
+            href='/'
             className={cs(
               styles.navbarBrand,
               hasMounted &&
