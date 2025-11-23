@@ -288,11 +288,7 @@ export default function ListPage({
           /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
         }
         .search-input::placeholder {
-          color: var(--fg-color-3);
-        }
-
-        .search-input::placeholder {
-          color: var(--fg-color-3);
+          color: var(--fg-color-2);
         }
 
         .sort-button {
