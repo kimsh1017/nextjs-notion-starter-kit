@@ -508,11 +508,17 @@ export default function ListPage({
             gap: 0.5rem; /* Reduce gap between sort button and tag select */
           }
           .sort-button {
-            width: 44px; /* Make it a small square */
+            /* width: 44px; / Make it a small square */
             padding: 0.5rem; /* Adjust padding for square button */
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
           .sort-button-text {
             display: none; /* Hide text */
+          }
+          .sort-button span[style] {
+            margin-left: 0 !important;
           }
           .tag-filter-select {
             width: 100px; /* Reduce width further */
