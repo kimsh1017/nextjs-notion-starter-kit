@@ -39,7 +39,7 @@ body.light-mode {
 
   --border-color: #e0e0e0; /* A light grey for light mode */
   --border-color-2: #d1d5db; /* gray-300 */
-  --search-bg-color: #f5f5f5; /* Slightly lighter than main bg for light mode */
+  --search-bg-color: var(--bg-color);
   --bg-color-1: #f9fafb; /* gray-50 */
 }
 
@@ -53,7 +53,7 @@ body.dark-mode {
 
   --border-color: #444444; /* A dark grey for dark mode */
   --border-color-2: #4b5563; /* gray-700 */
-  --search-bg-color: #333333; /* Slightly darker than main bg for dark mode */
+  --search-bg-color: var(--bg-color);
   --bg-color-1: #374151; /* gray-700 */
 }
 
