@@ -387,7 +387,7 @@ export default function ListPage({
         }
         .post-footer {
           display: flex;
-          align-items: center;
+          align-items: baseline;
           gap: 1rem;
           margin-top: 0.75rem;
         }
@@ -407,7 +407,7 @@ export default function ListPage({
         }
 
         .post-date {
-          font-size: 0.813rem;
+          font-size: 0.75rem;
           color: var(--fg-color-3);
           font-weight: 400;
           letter-spacing: 0.01em;
@@ -424,7 +424,6 @@ export default function ListPage({
           display: flex;
           gap: 0.75rem;
           flex-wrap: wrap;
-          margin-top: 0.25rem;
         }
 
         .tag {
