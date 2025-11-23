@@ -1,14 +1,14 @@
 import Image from 'next/legacy/image'
 import Link from 'next/link'
-import { formatDate, getBlockTitle, getPageProperty, getTextContent } from 'notion-utils'
 import { useMemo, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
+import { getBlockTitle, formatDate } from 'notion-utils'
 
-import type { PageProps } from '@/lib/types'
 import { Footer } from '@/components/Footer'
 import { rootNotionPageId } from '@/lib/config'
-import { mapImageUrl } from '@/lib/map-image-url'
+import { getPageHeader, getPosts } from '@/lib/get-page-data'
 import { getPage } from '@/lib/notion'
+import type { PageProps } from '@/lib/types'
 
 // This is the shape of the data we'll be fetching for our list.
 interface Post {
@@ -35,58 +35,18 @@ export const getStaticProps = async () => {
   const keys = Object.keys(recordMap.block)
   const rootPageKey = keys[0]
   let pageTitle = 'Blog Posts'
-  const pageHeader: string[] = []
+  let pageHeader: string[] = []
 
   if (rootPageKey) {
+    pageHeader = getPageHeader(recordMap, rootPageKey)
     const rootPageBlock = recordMap.block[rootPageKey]?.value
 
     if (rootPageBlock) {
       pageTitle = getBlockTitle(rootPageBlock, recordMap)
-
-      if (rootPageBlock.content) {
-        for (const blockId of rootPageBlock.content) {
-          const block = recordMap.block[blockId]?.value
-          if (block?.type === 'collection_view') {
-            break
-          }
-          if (block && block.type === 'text' && block.properties?.title) {
-            pageHeader.push(getTextContent(block.properties.title))
-          }
-        }
-      }
     }
   }
 
-  const posts: Post[] = []
-  for (const id in recordMap.block) {
-    const block = recordMap.block[id]?.value
-    // Check if the block is a page, belongs to a collection, and is not the root page itself.
-    if (
-      block &&
-      block.type === 'page' &&
-      block.parent_table === 'collection' &&
-      block.id !== pageId
-    ) {
-      const title = getBlockTitle(block, recordMap)
-      if (title) {
-        const publishedDate = getPageProperty<number>(
-          'Published',
-          block,
-          recordMap
-        )
-        const description = getPageProperty<string>(
-          'Description',
-          block,
-          recordMap
-        )
-        const tags = getPageProperty<string[]>('Tags', block, recordMap)
-        const coverImage =
-          mapImageUrl((block as any).format?.page_cover, block) || null
-
-        posts.push({ id, title, publishedDate, description, tags, coverImage })
-      }
-    }
-  }
+  const posts: Post[] = getPosts(recordMap, pageId)
 
   const props = {
     posts,
@@ -373,7 +333,12 @@ export default function ListPage({
         }
 
         .tag-filter-select {
-          padding: 0.5rem 1rem;
+          appearance: none;
+          padding: 0.5rem 2.5rem 0.5rem 1rem;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+          background-position: right 0.5rem center;
+          background-repeat: no-repeat;
+          background-size: 1.5em 1.5em;
           background-color: transparent;
           border: 1px solid var(--border-color-2);
           color: var(--fg-color-2);
