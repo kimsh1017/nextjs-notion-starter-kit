@@ -125,9 +125,6 @@ export default function ListPage({
       case 'oldest':
         sorted.sort((a, b) => (a.publishedDate || 0) - (b.publishedDate || 0))
         break
-      case 'title':
-        sorted.sort((a, b) => a.title.localeCompare(b.title))
-        break
       default:
         sorted.sort((a, b) => (b.publishedDate || 0) - (a.publishedDate || 0))
         break
@@ -159,12 +156,6 @@ export default function ListPage({
             onClick={() => setSortOrder('oldest')}
           >
             Oldest
-          </button>
-          <button
-            className={`sort-button ${sortOrder === 'title' ? 'active' : ''}`}
-            onClick={() => setSortOrder('title')}
-          >
-            Title
           </button>
         </div>
         <div className='search-input-container'>
