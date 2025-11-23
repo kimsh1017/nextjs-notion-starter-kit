@@ -153,7 +153,7 @@ export default function ListPage({
         </div>
         <div className='search-input-container'>
           <div className='search-input-wrapper relative sm:block'>
-            <FaSearch className='search-icon absolute left-2.5 top-2.5 h-4 w-4 text-slate-400' />
+            <FaSearch className='search-icon absolute left-2.5 top-[13px] h-4 w-4 text-slate-400' />
             <input
               type='text'
               placeholder='Search posts...'
@@ -297,18 +297,16 @@ export default function ListPage({
           line-height: 1; /* top-2.5 approximately centers it */
         }
 
-        .search-input {
-          height: 2.25rem; /* h-9 */
-          width: 200px; /* w-[200px] */
-          padding-left: 2.25rem; /* pl-9 */
-          background-color: var(--search-bg-color); /* Maintain custom background */
-          border: 1px solid var(--border-color); /* border-slate-200, use existing border-color */
-          border-radius: 4px; /* default roundedness */
-          color: var(--fg-color);
-          /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
-        }
-
-        .search-input::placeholder {
+                            .search-input {
+                              height: 42px; /* Set explicit height to match other controls */
+                              width: 200px; /* w-[200px] */
+                              padding: 0.5rem 1rem 0.5rem 2.5rem; /* Adjust padding to center text and make space for icon */
+                              background-color: var(--search-bg-color); /* Maintain custom background */
+                              border: 1px solid var(--border-color); /* border-slate-200, use existing border-color */
+                              border-radius: 4px; /* default roundedness */
+                              color: var(--fg-color);
+                              /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
+                            }        .search-input::placeholder {
           color: var(--fg-color-3);
         }
 
