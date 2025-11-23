@@ -47,7 +47,7 @@ body.dark-mode {
   --dropdown-arrow: var(--dropdown-arrow-dark);
   --fg-color: #e5e7eb; /* text-gray-200 */
   --fg-color-1: #d1d5db; /* text-gray-300 */
-  --fg-color-2: #9ca3af; /* text-gray-400 */
+  --fg-color-2: #c7ced9; /* text-gray-200 */
   --fg-color-3: #ffffff; /* text-gray-500 -> white */
   --fg-color-link-hover: #93c5fd; /* blue-300 */
 

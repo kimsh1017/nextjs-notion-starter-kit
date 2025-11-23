@@ -409,7 +409,7 @@ export default function ListPage({
         .post-date {
           font-size: 0.75rem;
           line-height: 1;
-          color: var(--fg-color-3);
+          color: var(--fg-color-2);
           font-weight: 400;
           letter-spacing: 0.01em;
         }
