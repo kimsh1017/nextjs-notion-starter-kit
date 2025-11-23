@@ -446,9 +446,8 @@ export default function ListPage({
 
         .tag {
           display: inline-block;
-          padding: 0.25rem 0;
           background: transparent;
-          border: 1px solid var(--border-color-2);
+          border: none;
           font-size: 0.75rem;
           color: var(--fg-color-2);
           font-weight: 500;
