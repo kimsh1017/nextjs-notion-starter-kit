@@ -488,6 +488,7 @@ export default function ListPage({
           .controls-wrapper {
             justify-content: flex-start; /* Left align */
             gap: 0.5rem;
+            flex-wrap: nowrap;
           }
           .sort-button {
             /* width: 44px; / Make it a small square */
@@ -508,6 +509,7 @@ export default function ListPage({
           }
           .search-input-wrapper {
             flex-grow: 1;
+            min-width: 0;
           }
           .search-input {
             width: 100%;
