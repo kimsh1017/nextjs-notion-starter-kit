@@ -140,22 +140,24 @@ export default function ListPage({
             </option>
           ))}
         </select>
-        <div className='search-input-wrapper relative sm:block'>
-          <FaSearch className='search-icon absolute left-2.5 top-[13px] h-4 w-4 text-slate-400' />
-          <input
-            type='text'
-            placeholder='Search'
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
-          />
+        <div className='right-controls'>
+          <div className='search-input-wrapper relative sm:block'>
+            <FaSearch className='search-icon absolute left-2.5 top-[13px] h-4 w-4 text-slate-400' />
+            <input
+              type='text'
+              placeholder='Search'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
+            />
+          </div>
+          <button className='sort-button' onClick={toggleSortOrder}>
+            <span className='sort-button-text'>{'최신순'}</span>
+            <span style={{ marginLeft: '0.5em' }}>
+              {sortOrder === 'newest' ? '↓' : '↑'}
+            </span>
+          </button>
         </div>
-        <button className='sort-button' onClick={toggleSortOrder}>
-          <span className='sort-button-text'>{'최신순'}</span>
-          <span style={{ marginLeft: '0.5em' }}>
-            {sortOrder === 'newest' ? '↓' : '↑'}
-          </span>
-        </button>
       </div>
       <hr className='divider' />
       <main>
@@ -247,12 +249,17 @@ export default function ListPage({
 
         .controls-wrapper {
           display: flex;
-          justify-content: flex-start; /* Changed from space-between */
+          justify-content: space-between; /* Changed from flex-start */
           align-items: center;
           margin-top: 0.43rem;
           margin-bottom: 0;
-          gap: 0.5rem; /* Changed from 1rem */
           flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        .right-controls {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
 
         .search-input-wrapper {
