@@ -224,7 +224,7 @@ export default function ListPage({
         }
 
         .blog-header {
-          margin-bottom: 3rem;
+          margin-bottom: 1.5rem;
           padding-bottom: 2rem;
         }
 
@@ -250,7 +250,7 @@ export default function ListPage({
           display: flex;
           justify-content: space-between; /* Changed from flex-start */
           align-items: center;
-          margin-top: 0.43rem;
+          margin-top: 0;
           margin-bottom: 0;
           flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
