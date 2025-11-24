@@ -21,7 +21,8 @@ export default withBundleAnalyzer({
     ],
     formats: ['image/avif', 'image/webp'],
     dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
+    contentSecurityPolicy:
+      "default-src 'self'; script-src 'self' https://utteranc.es; sandbox;"
   },
 
   webpack: (config) => {
