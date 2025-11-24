@@ -10,7 +10,7 @@ export default siteConfig({
 
   // basic site info (required)
   name: '김성훈의 개발 블로그',
-  domain: 'https://kimsh1017-dev-blog.vercel.app/',
+  domain: 'kimsh1017-dev-blog.vercel.app',
   author: '김성훈',
 
   // open graph metadata (optional)
