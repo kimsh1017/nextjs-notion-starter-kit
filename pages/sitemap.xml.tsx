@@ -37,19 +37,26 @@ const createSitemap = (siteMap: SiteMap) =>
     <url>
       <loc>${host}</loc>
     </url>
-
-    <url>
-      <loc>${host}/</loc>
-    </url>
-
     ${Object.keys(siteMap.canonicalPageMap)
-      .map((canonicalPagePath) =>
-        `
+      .map((canonicalPagePath) => {
+        const pageId = siteMap.canonicalPageMap[canonicalPagePath]
+        const recordMap = siteMap.pageMap[pageId]
+        if (!recordMap) return ''
+        const lastModified =
+          recordMap.block[pageId]?.value?.last_edited_time
+        return `
           <url>
             <loc>${host}/${canonicalPagePath}</loc>
+            ${
+              lastModified
+                ? `<lastmod>${new Date(lastModified)
+                    .toISOString()
+                    .split('T')[0]}</lastmod>`
+                : ''
+            }
           </url>
         `.trim()
-      )
+      })
       .join('')}
   </urlset>
 `
