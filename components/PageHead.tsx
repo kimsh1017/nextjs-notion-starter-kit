@@ -11,13 +11,17 @@ export function PageHead({
   pageId,
   image,
   url,
-  isBlogPost
+  isBlogPost,
+  datePublished,
+  dateModified
 }: types.PageProps & {
   title?: string
   description?: string
   image?: string
   url?: string
   isBlogPost?: boolean
+  datePublished?: string
+  dateModified?: number
 }) {
   const rssFeedUrl = `${config.host}/feed`
 
@@ -96,6 +100,12 @@ export function PageHead({
             headline: title,
             name: title,
             description,
+            datePublished: datePublished
+              ? new Date(datePublished).toISOString()
+              : undefined,
+            dateModified: dateModified
+              ? new Date(dateModified).toISOString()
+              : undefined,
             author: {
               '@type': 'Person',
               name: config.author
