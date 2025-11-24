@@ -14,11 +14,11 @@ export default siteConfig({
   author: '김성훈',
 
   // open graph metadata (optional)
-  description: 'Example Next.js Notion Starter Kit Site',
+  description: '김성훈의 개발 블로그입니다.',
 
   // social usernames (optional)
   github: 'kimsh1017',
-  linkedin: 'null',
+  linkedin: '성훈-김-90278b352',
   // mastodon: '#', // optional mastodon profile URL, provides link verification
   // newsletter: '#', // optional newsletter URL
   // youtube: '#', // optional youtube channel name or `channel/UCGbXXXXXXXXXXXXXXXXXXXXXX`
