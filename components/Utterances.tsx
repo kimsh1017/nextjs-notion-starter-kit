@@ -18,7 +18,7 @@ export function Utterances({ repo }: { repo: string }) {
     script.crossOrigin = 'anonymous'
 
     script.setAttribute('repo', repo)
-    script.setAttribute('issue-term', 'og:title')
+    script.setAttribute('issue-term', 'url')
     script.setAttribute('theme', theme)
 
     ref.current.append(script)
