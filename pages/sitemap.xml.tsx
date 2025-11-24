@@ -40,6 +40,7 @@ const createSitemap = (siteMap: SiteMap) =>
     ${Object.keys(siteMap.canonicalPageMap)
       .map((canonicalPagePath) => {
         const pageId = siteMap.canonicalPageMap[canonicalPagePath]
+        if (!pageId) return ''
         const recordMap = siteMap.pageMap[pageId]
         if (!recordMap) return ''
         const lastModified =

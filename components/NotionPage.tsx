@@ -23,6 +23,7 @@ import { Loading } from './Loading'
 import { Page404 } from './Page404'
 import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
+import { Utterances } from './Utterances'
 import styles from './styles.module.css'
 
 // -----------------------------------------------------------------------------
@@ -310,6 +311,12 @@ export function NotionPage({
         pageAside={pageAside}
         footer={footer}
       />
+
+      {isBlogPost && (
+        <div className={styles.utterances}>
+          <Utterances repo={`${config.github}/blog-comments-repo`} />
+        </div>
+      )}
     </>
   )
 }
