@@ -1,11 +1,13 @@
 import type { ExtendedRecordMap } from 'notion-types'
 import { getBlockTitle, getPageProperty, getTextContent } from 'notion-utils'
 
+import { getCanonicalPageId } from './get-canonical-page-id'
 import { mapImageUrl } from './map-image-url'
 
 interface Post {
   id: string
   title: string
+  slug: string
   publishedDate?: number
   description?: string
   tags?: string[]
@@ -51,7 +53,8 @@ export function getPosts(
       block.id !== rootPageId
     ) {
       const title = getBlockTitle(block, recordMap)
-      if (title) {
+      const slug = getCanonicalPageId(id, recordMap)
+      if (title && slug) {
         const publishedDate = getPageProperty<number>(
           'Published',
           block,
@@ -66,7 +69,15 @@ export function getPosts(
         const coverImage =
           mapImageUrl((block as any).format?.page_cover, block) || null
 
-        posts.push({ id, title, publishedDate, description, tags, coverImage })
+        posts.push({
+          id,
+          title,
+          slug,
+          publishedDate,
+          description,
+          tags,
+          coverImage
+        })
       }
     }
   }

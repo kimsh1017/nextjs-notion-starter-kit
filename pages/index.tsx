@@ -15,6 +15,7 @@ import type { PageProps } from '@/lib/types'
 interface Post {
   id: string
   title: string
+  slug: string
   publishedDate?: number
   description?: string
   tags?: string[]
@@ -166,7 +167,7 @@ export default function ListPage({
           <ul className='posts-list'>
             {sortedAndFilteredPosts.map((post) => (
               <li key={post.id} className='post-item'>
-                <Link href={`/${post.id}`} legacyBehavior>
+                <Link href={`/${post.slug}`} legacyBehavior>
                   <a className='post-link'>
                     <div className='post-content'>
                       <h2 className='post-title'>{post.title}</h2>
