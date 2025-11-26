@@ -32,7 +32,7 @@
 }
 
 .navbarBrand:hover {
-  color: #888888;
+  color: var(--fg-color-link-hover);
 }
 
 .lightModeTextColor {
@@ -66,7 +66,7 @@
 
 .toggleDarkMode:hover {
   background-color: rgba(136, 136, 136, 0.1); /* Subtle grey background on hover */
-  color: #2795e9; /* Keep the existing color change */
+  color: var(--fg-color-link-hover); /* Keep the existing color change */
 }
 
 /* Responsive Design */
