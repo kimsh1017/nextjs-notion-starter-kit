@@ -127,6 +127,12 @@
   border-left: 4px solid #67bdfc;
 }
 
+@media only screen and (max-width: 640px) {
+  .notion-title {
+    font-size: 2rem;
+  }
+}
+
 .notion-h1,
 .notion-h2,
 .notion-h3 {
