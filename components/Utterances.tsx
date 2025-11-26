@@ -24,5 +24,17 @@ export function Utterances({ repo }: { repo: string }) {
     ref.current.append(script)
   }, [repo, theme])
 
+  React.useEffect(() => {
+    const iframe = document.querySelector<HTMLIFrameElement>(
+      'iframe.utterances-frame'
+    )
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage(
+        { type: 'set-theme', theme },
+        'https://utteranc.es'
+      )
+    }
+  }, [theme])
+
   return <div ref={ref} />
 }
