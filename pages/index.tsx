@@ -6,6 +6,8 @@ import { getBlockTitle } from 'notion-utils'
 import { formatDate } from '@/lib/format-date'
 
 import { Footer } from '@/components/Footer'
+import { PageHead } from '@/components/PageHead'
+import siteConfig from '../site.config'
 import { rootNotionPageId } from '@/lib/config'
 import { getPageHeader, getPosts } from '@/lib/get-page-data'
 import { getPage } from '@/lib/notion'
@@ -54,7 +56,8 @@ export const getStaticProps = async () => {
     posts,
     pageTitle,
     pageHeader,
-    uniqueTags: [] as string[]
+    uniqueTags: [] as string[],
+    site: siteConfig
   }
 
   const collection = Object.values(recordMap.collection)[0]?.value
@@ -78,7 +81,8 @@ export default function ListPage({
   posts,
   pageTitle,
   pageHeader,
-  uniqueTags
+  uniqueTags,
+  site
 }: ListPageProps) {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
   const [searchQuery, setSearchQuery] = useState('')
@@ -119,401 +123,409 @@ export default function ListPage({
     return sorted
   }, [posts, sortOrder, searchQuery, selectedTag])
 
+  const description = pageHeader?.join(' ').trim() || site?.description
+
   return (
-    <div className='blog-container'>
-      <header className='blog-header'>
-        <h1>{pageTitle}</h1>
-        {pageHeader &&
-          pageHeader.map((header, index) => (
-            <p className='page-header' key={index}>
-              {header}
-            </p>
-          ))}
-      </header>
-      <div className='controls-wrapper'>
-        <select
-          className='tag-filter-select'
-          value={selectedTag}
-          onChange={(e) => setSelectedTag(e.target.value)}
-        >
-          {uniqueTags.map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
-        <div className='right-controls'>
-          <div className='search-input-wrapper relative sm:block'>
-            <FaSearch className='search-icon absolute left-2.5 top-[13px] h-4 w-4 text-slate-400' />
-            <input
-              type='text'
-              placeholder='Search'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
-            />
-          </div>
-          <button className='sort-button' onClick={toggleSortOrder}>
-            <span className='sort-button-text'>{'최신순'}</span>
-            <span style={{ marginLeft: '0.5em' }}>
-              {sortOrder === 'newest' ? '↓' : '↑'}
-            </span>
-          </button>
-        </div>
-      </div>
-      <hr className='divider' />
-      <main>
-        {sortedAndFilteredPosts?.length > 0 ? (
-          <ul className='posts-list'>
-            {sortedAndFilteredPosts.map((post) => (
-              <li key={post.id} className='post-item'>
-                <Link href={`/${post.slug}`} legacyBehavior>
-                  <a className='post-link'>
-                    <div className='post-content'>
-                      <h2 className='post-title'>{post.title}</h2>
-                      {post.description && (
-                        <p className='post-description'>{post.description}</p>
-                      )}
-                      <div className='post-footer'>
-                        {post.tags && (
-                          <div className='post-tags'>
-                            {post.tags.map((tag) => (
-                              <span className='tag' key={tag}>
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                        {post.publishedDate && (
-                          <div className='post-date'>
-                            {formatDate(post.publishedDate)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    {post.coverImage && (
-                      <div className='cover-image-wrapper'>
-                        <Image
-                          src={post.coverImage}
-                          alt={post.title}
-                          layout='fill'
-                          objectFit='cover'
-                          sizes='(max-width: 640px) 100vw, 252px'
-                        />
-                      </div>
-                    )}
-                  </a>
-                </Link>
-              </li>
+    <>
+      <PageHead site={site} title={pageTitle} description={description} />
+
+      <div className='blog-container'>
+        <header className='blog-header'>
+          <h1>{pageTitle}</h1>
+          {pageHeader &&
+            pageHeader.map((header, index) => (
+              <p className='page-header' key={index}>
+                {header}
+              </p>
             ))}
-          </ul>
-        ) : (
-          <p className='no-posts'>No posts found.</p>
-        )}
-      </main>
+        </header>
+        <div className='controls-wrapper'>
+          <select
+            className='tag-filter-select'
+            value={selectedTag}
+            onChange={(e) => setSelectedTag(e.target.value)}
+          >
+            {uniqueTags.map((tag) => (
+              <option key={tag} value={tag}>
+                {tag}
+              </option>
+            ))}
+          </select>
+          <div className='right-controls'>
+            <div className='search-input-wrapper relative sm:block'>
+              <FaSearch className='search-icon absolute left-2.5 top-[13px] h-4 w-4 text-slate-400' />
+              <input
+                type='text'
+                placeholder='Search'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className='search-input h-9 w-[200px] pl-9 bg-slate-50 border-slate-200 focus-visible:ring-blue-500/20'
+              />
+            </div>
+            <button className='sort-button' onClick={toggleSortOrder}>
+              <span className='sort-button-text'>{'최신순'}</span>
+              <span style={{ marginLeft: '0.5em' }}>
+                {sortOrder === 'newest' ? '↓' : '↑'}
+              </span>
+            </button>
+          </div>
+        </div>
+        <hr className='divider' />
+        <main>
+          {sortedAndFilteredPosts?.length > 0 ? (
+            <ul className='posts-list'>
+              {sortedAndFilteredPosts.map((post) => (
+                <li key={post.id} className='post-item'>
+                  <Link href={`/${post.slug}`} legacyBehavior>
+                    <a className='post-link'>
+                      <div className='post-content'>
+                        <h2 className='post-title'>{post.title}</h2>
+                        {post.description && (
+                          <p className='post-description'>
+                            {post.description}
+                          </p>
+                        )}
+                        <div className='post-footer'>
+                          {post.tags && (
+                            <div className='post-tags'>
+                              {post.tags.map((tag) => (
+                                <span className='tag' key={tag}>
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          {post.publishedDate && (
+                            <div className='post-date'>
+                              {formatDate(post.publishedDate)}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {post.coverImage && (
+                        <div className='cover-image-wrapper'>
+                          <Image
+                            src={post.coverImage}
+                            alt={post.title}
+                            layout='fill'
+                            objectFit='cover'
+                            sizes='(max-width: 640px) 100vw, 252px'
+                          />
+                        </div>
+                      )}
+                    </a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className='no-posts'>No posts found.</p>
+          )}
+        </main>
 
-      <Footer />
+        <Footer />
 
-      <style jsx>{`
-        .blog-container {
-          max-width: 1140px;
-          margin: 0 auto;
-          padding: 2rem;
-          background-color: var(--bg-color);
-          color: var(--fg-color);
-          min-height: 100vh;
-        }
-
-        .blog-header {
-          margin-bottom: 1.5rem;
-          padding-bottom: 2rem;
-        }
-
-        .blog-header h1 {
-          font-size: 2rem;
-          font-weight: 700;
-          letter-spacing: -0.02em;
-          margin-bottom: 0.75rem;
-          color: var(--fg-color);
-          line-height: 1.2;
-        }
-
-        .page-header {
-          margin: 0.5rem 0 0;
-          font-size: 1rem;
-          color: var(--fg-color-2);
-          line-height: 1.6;
-          letter-spacing: -0.01em;
-          font-weight: 400;
-        }
-
-        .controls-wrapper {
-          display: flex;
-          justify-content: space-between; /* Changed from flex-start */
-          align-items: center;
-          margin-top: 0;
-          margin-bottom: 0;
-          flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        }
-
-        .right-controls {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .search-input-wrapper {
-          position: relative;
-          /* hidden sm:block will be handled by utility classes directly on the div */
-        }
-
-        .search-icon {
-          color: var(
-            --fg-color-2
-          ); /* Using existing fg-color-2 for icon color */
-          height: 1rem; /* h-4 */
-          width: 1rem; /* w-4 */
-          line-height: 1; /* top-2.5 approximately centers it */
-        }
-
-        .search-input {
-          height: 42px; /* Set explicit height to match other controls */
-          width: 300px; /* w-[200px] */
-          padding: 0.5rem 1rem 0.5rem 2.5rem; /* Adjust padding to center text and make space for icon */
-          background-color: var(
-            --search-bg-color
-          ); /* Maintain custom background */
-          border: 1px solid var(--border-color); /* border-slate-200, use existing border-color */
-          border-radius: 4px; /* default roundedness */
-          color: var(--fg-color);
-          /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
-        }
-        .search-input::placeholder {
-          color: var(--fg-color-2);
-        }
-
-        .sort-button {
-          padding: 0.5rem 1rem;
-          background-color: transparent;
-          border: 1px solid var(--border-color-2);
-          color: var(--fg-color-2);
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .sort-button:hover {
-          background-color: var(--bg-color-1);
-          border-color: var(--fg-color-link-hover);
-          color: var(--fg-color-link-hover);
-        }
-
-        .tag-filter-select {
-          width: 150px;
-          appearance: none;
-          padding: 0.5rem 2.5rem 0.5rem 1rem;
-          background-image: var(--dropdown-arrow);
-          background-position: right 0.5rem center;
-          background-repeat: no-repeat;
-          background-size: 1.5em 1.5em;
-          background-color: transparent;
-          border: 1px solid var(--border-color-2);
-          color: var(--fg-color-2);
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .tag-filter-select:hover {
-          background-color: var(--bg-color-1);
-          border-color: var(--fg-color-link-hover);
-          color: var(--fg-color-link-hover);
-        }
-
-        .divider {
-          border: 0;
-          border-top: 1px solid var(--border-color);
-          margin: 0.5rem 0 1rem 0;
-        }
-
-        .posts-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .post-item {
-          padding: 0.75rem 0;
-          transition: background-color 0.15s ease;
-        }
-
-        .post-item:hover {
-          background-color: var(--bg-color-1);
-        }
-
-        .post-link {
-          text-decoration: none;
-          color: inherit;
-          display: flex;
-          align-items: stretch; /* Changed from center to stretch */
-          justify-content: space-between;
-          min-height: 150px;
-        }
-
-        .cover-image-wrapper {
-          position: relative;
-          width: 252px; /* Reduced to 70% of 360px */
-          height: 151px; /* Reduced to 70% of 216px */
-          margin-left: 2rem;
-          overflow: hidden !important;
-          border: 1px solid var(--border-color);
-          background-color: var(--bg-color-1);
-          border-radius: 8px;
-          flex-shrink: 0; /* Prevent from shrinking */
-        }
-
-        .post-content {
-          flex-grow: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          padding-left: 0.75rem;
-        }
-        .post-footer {
-          display: flex;
-          align-items: baseline;
-          gap: 1rem;
-          margin-top: 0.75rem;
-        }
-
-        .post-title {
-          font-size: 1.5rem;
-          font-weight: 600;
-          letter-spacing: normal;
-          color: var(--fg-color);
-          transition: color 0.15s ease;
-          line-height: 1.3;
-          margin: 0;
-        }
-
-        .post-link:hover .post-title {
-          color: var(--fg-color-link-hover);
-        }
-
-        .post-date {
-          font-size: 0.75rem;
-          line-height: 1;
-          color: var(--fg-color-2);
-          font-weight: 400;
-          letter-spacing: 0.01em;
-        }
-
-        .post-description {
-          color: var(--fg-color-2);
-          line-height: 1.6;
-          letter-spacing: normal;
-          font-size: 0.938rem;
-        }
-
-        .post-tags {
-          display: flex;
-          gap: 0.75rem;
-          flex-wrap: wrap;
-        }
-
-        .tag {
-          display: inline-block;
-          background: transparent;
-          border: none;
-          font-size: 0.75rem;
-          color: var(--fg-color-2);
-          font-weight: 500;
-          letter-spacing: 0.02em;
-          transition: all 0.15s ease;
-          line-height: 1;
-        }
-
-        .tag:hover {
-          border-color: var(--fg-color-link-hover);
-          color: var(--fg-color-link-hover);
-        }
-
-        .no-posts {
-          padding: 4rem 0;
-          text-align: center;
-          color: var(--fg-color-3);
-          font-size: 1rem;
-        }
-
-        @media (max-width: 640px) {
+        <style jsx>{`
           .blog-container {
-            padding: 1.5rem;
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--bg-color);
+            color: var(--fg-color);
+            min-height: 100vh;
+          }
+
+          .blog-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 2rem;
           }
 
           .blog-header h1 {
-            font-size: 1.75rem;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            color: var(--fg-color);
+            line-height: 1.2;
           }
 
           .page-header {
-            font-size: 0.938rem;
+            margin: 0.5rem 0 0;
+            font-size: 1rem;
+            color: var(--fg-color-2);
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+            font-weight: 400;
           }
 
-          .post-title {
-            font-size: 1.25rem;
+          .controls-wrapper {
+            display: flex;
+            justify-content: space-between; /* Changed from flex-start */
+            align-items: center;
+            margin-top: 0;
+            margin-bottom: 0;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+          }
+
+          .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .search-input-wrapper {
+            position: relative;
+            /* hidden sm:block will be handled by utility classes directly on the div */
+          }
+
+          .search-icon {
+            color: var(
+              --fg-color-2
+            ); /* Using existing fg-color-2 for icon color */
+            height: 1rem; /* h-4 */
+            width: 1rem; /* w-4 */
+            line-height: 1; /* top-2.5 approximately centers it */
+          }
+
+          .search-input {
+            height: 42px; /* Set explicit height to match other controls */
+            width: 300px; /* w-[200px] */
+            padding: 0.5rem 1rem 0.5rem 2.5rem; /* Adjust padding to center text and make space for icon */
+            background-color: var(
+              --search-bg-color
+            ); /* Maintain custom background */
+            border: 1px solid var(--border-color); /* border-slate-200, use existing border-color */
+            border-radius: 4px; /* default roundedness */
+            color: var(--fg-color);
+            /* focus-visible:ring-blue-500/20 will be handled by global styles or a custom class if needed */
+          }
+          .search-input::placeholder {
+            color: var(--fg-color-2);
+          }
+
+          .sort-button {
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            border: 1px solid var(--border-color-2);
+            color: var(--fg-color-2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+
+          .sort-button:hover {
+            background-color: var(--bg-color-1);
+            border-color: var(--fg-color-link-hover);
+            color: var(--fg-color-link-hover);
+          }
+
+          .tag-filter-select {
+            width: 150px;
+            appearance: none;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            background-image: var(--dropdown-arrow);
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            background-color: transparent;
+            border: 1px solid var(--border-color-2);
+            color: var(--fg-color-2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .tag-filter-select:hover {
+            background-color: var(--bg-color-1);
+            border-color: var(--fg-color-link-hover);
+            color: var(--fg-color-link-hover);
+          }
+
+          .divider {
+            border: 0;
+            border-top: 1px solid var(--border-color);
+            margin: 0.5rem 0 1rem 0;
+          }
+
+          .posts-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          .post-item {
+            padding: 0.75rem 0;
+            transition: background-color 0.15s ease;
+          }
+
+          .post-item:hover {
+            background-color: var(--bg-color-1);
           }
 
           .post-link {
-            flex-direction: column; /* Stack image and text vertically */
-            min-height: auto; /* Remove min-height for stacked layout */
-          }
-
-          .post-content {
-            order: 1; /* Place content after image */
-            padding-left: 0; /* Remove specific padding for mobile if desired for full width */
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: stretch; /* Changed from center to stretch */
+            justify-content: space-between;
+            min-height: 150px;
           }
 
           .cover-image-wrapper {
-            order: 0; /* Place image before content */
-            width: 100%; /* Image takes full width */
-            height: 0;
-            padding-bottom: 60%; /* Maintain aspect ratio */
-            margin: 0 auto 1rem auto; /* Center image and add bottom margin */
+            position: relative;
+            width: 252px; /* Reduced to 70% of 360px */
+            height: 151px; /* Reduced to 70% of 216px */
+            margin-left: 2rem;
+            overflow: hidden !important;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color-1);
+            border-radius: 8px;
+            flex-shrink: 0; /* Prevent from shrinking */
           }
-          .controls-wrapper {
-            justify-content: flex-start; /* Left align */
-            gap: 0.5rem;
-            flex-wrap: nowrap;
-          }
-          .sort-button {
-            /* width: 44px; / Make it a small square */
-            padding: 0.5rem; /* Adjust padding for square button */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .sort-button-text {
-            display: none; /* Hide text */
-          }
-          .sort-button span[style] {
-            margin-left: 0 !important;
-          }
-          .tag-filter-select {
-            width: 100px; /* Reduce width further */
-            padding: 0.5rem 2.5rem 0.5rem 1rem; /* Adjust padding for smaller width */
-          }
-          .search-input-wrapper {
+
+          .post-content {
             flex-grow: 1;
-            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-left: 0.75rem;
           }
-          .search-input {
-            width: 100%;
+          .post-footer {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-top: 0.75rem;
           }
-          /* .search-input and .search-icon revert to desktop styles */
-        }
-      `}</style>
-    </div>
+
+          .post-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: normal;
+            color: var(--fg-color);
+            transition: color 0.15s ease;
+            line-height: 1.3;
+            margin: 0;
+          }
+
+          .post-link:hover .post-title {
+            color: var(--fg-color-link-hover);
+          }
+
+          .post-date {
+            font-size: 0.75rem;
+            line-height: 1;
+            color: var(--fg-color-2);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+          }
+
+          .post-description {
+            color: var(--fg-color-2);
+            line-height: 1.6;
+            letter-spacing: normal;
+            font-size: 0.938rem;
+          }
+
+          .post-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+          }
+
+          .tag {
+            display: inline-block;
+            background: transparent;
+            border: none;
+            font-size: 0.75rem;
+            color: var(--fg-color-2);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            transition: all 0.15s ease;
+            line-height: 1;
+          }
+
+          .tag:hover {
+            border-color: var(--fg-color-link-hover);
+            color: var(--fg-color-link-hover);
+          }
+
+          .no-posts {
+            padding: 4rem 0;
+            text-align: center;
+            color: var(--fg-color-3);
+            font-size: 1rem;
+          }
+
+          @media (max-width: 640px) {
+            .blog-container {
+              padding: 1.5rem;
+            }
+
+            .blog-header h1 {
+              font-size: 1.75rem;
+            }
+
+            .page-header {
+              font-size: 0.938rem;
+            }
+
+            .post-title {
+              font-size: 1.25rem;
+            }
+
+            .post-link {
+              flex-direction: column; /* Stack image and text vertically */
+              min-height: auto; /* Remove min-height for stacked layout */
+            }
+
+            .post-content {
+              order: 1; /* Place content after image */
+              padding-left: 0; /* Remove specific padding for mobile if desired for full width */
+            }
+
+            .cover-image-wrapper {
+              order: 0; /* Place image before content */
+              width: 100%; /* Image takes full width */
+              height: 0;
+              padding-bottom: 60%; /* Maintain aspect ratio */
+              margin: 0 auto 1rem auto; /* Center image and add bottom margin */
+            }
+            .controls-wrapper {
+              justify-content: flex-start; /* Left align */
+              gap: 0.5rem;
+              flex-wrap: nowrap;
+            }
+            .sort-button {
+              /* width: 44px; / Make it a small square */
+              padding: 0.5rem; /* Adjust padding for square button */
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .sort-button-text {
+              display: none; /* Hide text */
+            }
+            .sort-button span[style] {
+              margin-left: 0 !important;
+            }
+            .tag-filter-select {
+              width: 100px; /* Reduce width further */
+              padding: 0.5rem 2.5rem 0.5rem 1rem; /* Adjust padding for smaller width */
+            }
+            .search-input-wrapper {
+              flex-grow: 1;
+              min-width: 0;
+            }
+            .search-input {
+              width: 100%;
+            }
+            /* .search-input and .search-icon revert to desktop styles */
+          }
+        `}</style>
+      </div>
+    </>
   )
 }
