@@ -309,7 +309,6 @@ export function NotionPage({
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : undefined}
         pageAside={pageAside}
-        footer={footer}
       />
 
       {isBlogPost && (
@@ -317,6 +316,8 @@ export function NotionPage({
           <Utterances repo={`${config.github}/blog-comments-repo`} />
         </div>
       )}
+
+      {footer}
     </>
   )
 }
