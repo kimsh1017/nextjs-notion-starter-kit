@@ -73,7 +73,7 @@ export const getStaticProps = async () => {
 
   return {
     props,
-    revalidate: 10
+    revalidate: 60
   }
 }
 // The React component to render the list of posts.
