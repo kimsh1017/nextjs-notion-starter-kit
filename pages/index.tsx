@@ -485,19 +485,21 @@ export default function ListPage({
           .load-more-wrapper {
             display: flex;
             justify-content: center;
-            padding: 2rem 0;
+            padding: 0 0.75rem 2rem 0.75rem;
           }
 
           .load-more-button {
             padding: 0.75rem 2rem;
             background-color: var(--fg-color-link);
             color: var(--fg-color);
-            border: none;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
             transition: background-color 0.2s ease;
+            width: 100%;
+            text-align: center;
           }
 
           .load-more-button:hover {
