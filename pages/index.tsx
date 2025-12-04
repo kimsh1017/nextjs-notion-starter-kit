@@ -491,7 +491,7 @@ export default function ListPage({
           .load-more-button {
             padding: 0.75rem 2rem;
             background-color: var(--fg-color-link);
-            color: white;
+            color: var(--fg-color);
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -501,7 +501,7 @@ export default function ListPage({
           }
 
           .load-more-button:hover {
-            background-color: var(--fg-color-link-hover);
+            background-color: var(--bg-color-1);
           }
 
 
