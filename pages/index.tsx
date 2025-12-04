@@ -483,9 +483,7 @@ export default function ListPage({
           }
           
           .load-more-wrapper {
-            display: flex;
-            justify-content: center;
-            padding: 0 0.75rem 2rem 0.75rem;
+            padding: 2rem 0; /* Only vertical padding */
           }
 
           .load-more-button {
@@ -498,7 +496,7 @@ export default function ListPage({
             font-size: 1rem;
             font-weight: 600;
             transition: background-color 0.2s ease;
-            width: 100%;
+            width: 100%; /* Make it full width */
             text-align: center;
           }
 
