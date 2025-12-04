@@ -17,3 +17,7 @@
 *   **`.github/workflows/`**: GitHub Actions를 사용하는 CI/CD 설정 파일 (`build.yml`)을 포함합니다.
 
 전반적으로 이 프로젝트는 Notion에서 콘텐츠를 가져와 블로그로 렌더링하기 위해 Next.js를 사용하도록 구성되어 있으며, TypeScript로 개발되었습니다.
+
+## 빌드 명령어
+- 빌드 및 컴파일 명령어는 다음과 같습니다. `npm run build` 
+- 모든 파일 수정이 끝난 후에는 항상 빌드를 진행하고 나타나는 오류를 해결하세요.
