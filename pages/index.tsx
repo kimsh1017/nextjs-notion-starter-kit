@@ -1,6 +1,6 @@
 import Image from 'next/legacy/image'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { getBlockTitle } from 'notion-utils'
 import { formatDate } from '@/lib/format-date'
@@ -87,6 +87,8 @@ export default function ListPage({
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTag, setSelectedTag] = useState<string>('All')
+  const POSTS_PER_PAGE = 8
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
 
   const toggleSortOrder = () => {
     setSortOrder((current) => (current === 'newest' ? 'oldest' : 'newest'))
@@ -122,6 +124,18 @@ export default function ListPage({
     }
     return sorted
   }, [posts, sortOrder, searchQuery, selectedTag])
+
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(POSTS_PER_PAGE)
+  }, [sortOrder, searchQuery, selectedTag])
+
+  const visiblePosts = sortedAndFilteredPosts.slice(0, visibleCount)
+  const hasMore = visibleCount < sortedAndFilteredPosts.length
+
+  const handleLoadMore = () => {
+    setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE)
+  }
 
   const description = pageHeader?.join(' ').trim() || site?.description
 
@@ -172,52 +186,61 @@ export default function ListPage({
         </div>
         <hr className='divider' />
         <main>
-          {sortedAndFilteredPosts?.length > 0 ? (
-            <ul className='posts-list'>
-              {sortedAndFilteredPosts.map((post) => (
-                <li key={post.id} className='post-item'>
-                  <Link href={`/${post.slug}`} legacyBehavior>
-                    <a className='post-link'>
-                      <div className='post-content'>
-                        <h2 className='post-title'>{post.title}</h2>
-                        {post.description && (
-                          <p className='post-description'>
-                            {post.description}
-                          </p>
+          {visiblePosts?.length > 0 ? (
+            <>
+              <ul className='posts-list'>
+                {visiblePosts.map((post) => (
+                  <li key={post.id} className='post-item'>
+                    <Link href={`/${post.slug}`} legacyBehavior>
+                      <a className='post-link'>
+                        <div className='post-content'>
+                          <h2 className='post-title'>{post.title}</h2>
+                          {post.description && (
+                            <p className='post-description'>
+                              {post.description}
+                            </p>
+                          )}
+                          <div className='post-footer'>
+                            {post.tags && (
+                              <div className='post-tags'>
+                                {post.tags.map((tag) => (
+                                  <span className='tag' key={tag}>
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {post.publishedDate && (
+                              <div className='post-date'>
+                                {formatDate(post.publishedDate)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        {post.coverImage && (
+                          <div className='cover-image-wrapper'>
+                            <Image
+                              src={post.coverImage}
+                              alt={post.title}
+                              layout='fill'
+                              objectFit='cover'
+                              sizes='(max-width: 640px) 100vw, 252px'
+                            />
+                          </div>
                         )}
-                        <div className='post-footer'>
-                          {post.tags && (
-                            <div className='post-tags'>
-                              {post.tags.map((tag) => (
-                                <span className='tag' key={tag}>
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                          {post.publishedDate && (
-                            <div className='post-date'>
-                              {formatDate(post.publishedDate)}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      {post.coverImage && (
-                        <div className='cover-image-wrapper'>
-                          <Image
-                            src={post.coverImage}
-                            alt={post.title}
-                            layout='fill'
-                            objectFit='cover'
-                            sizes='(max-width: 640px) 100vw, 252px'
-                          />
-                        </div>
-                      )}
-                    </a>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              {hasMore && (
+                <div className='load-more-wrapper'>
+                  <button onClick={handleLoadMore} className='load-more-button'>
+                    더보기
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <p className='no-posts'>No posts found.</p>
           )}
@@ -458,6 +481,29 @@ export default function ListPage({
             color: var(--fg-color-3);
             font-size: 1rem;
           }
+          
+          .load-more-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+          }
+
+          .load-more-button {
+            padding: 0.75rem 2rem;
+            background-color: var(--fg-color-link);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+          }
+
+          .load-more-button:hover {
+            background-color: var(--fg-color-link-hover);
+          }
+
 
           @media (max-width: 640px) {
             .blog-container {
