@@ -54,17 +54,30 @@ export default function NotionDomainDynamicPage(props: PageProps) {
 
   useEffect(() => {
     if (props.pageId) {
-      fetch(`/api/views/${props.pageId}`, {
-        method: 'POST'
-      })
-        .then((res) => res.json())
-        .then((data: any) => {
-          setViews(data.views)
-        })
-        .catch((err) => {
-          console.error('Error fetching views:', err)
-        })
+      const sessionStorageKey = `viewed-${props.pageId}`;
+      const hasViewedInSession = sessionStorage.getItem(sessionStorageKey);
+
+      const fetchAndUpdateViews = async (method: 'GET' | 'POST') => {
+        try {
+          const res = await fetch(`/api/views/${props.pageId}`, { method });
+          const data: any = await res.json();
+          setViews(data.views);
+          if (method === 'POST') {
+            sessionStorage.setItem(sessionStorageKey, 'true');
+          }
+        } catch (err) {
+          console.error('Error fetching or updating views:', err);
+        }
+      };
+
+      if (!hasViewedInSession) {
+        // First view in this session, increment and get count
+        void fetchAndUpdateViews('POST');
+      } else {
+        // Already viewed in this session, just get count
+        void fetchAndUpdateViews('GET');
+      }
     }
-  }, [props.pageId])
+  }, [props.pageId]);
   return <NotionPage {...props} views={views} />
 }
