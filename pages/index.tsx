@@ -127,18 +127,19 @@ export default function ListPage({
     return sorted
   }, [posts, sortOrder, searchQuery, selectedTag])
 
-  const visiblePosts = sortedAndFilteredPosts.slice(0, visibleCount)
-  const hasMore = visibleCount < sortedAndFilteredPosts.length
+  const { visiblePosts, hasMore } = useMemo(() => {
+    const sliced = sortedAndFilteredPosts.slice(0, visibleCount)
+    return {
+      visiblePosts: sliced,
+      hasMore: sliced.length < sortedAndFilteredPosts.length
+    }
+  }, [sortedAndFilteredPosts, visibleCount])
 
   // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(POSTS_PER_PAGE)
   }, [sortOrder, searchQuery, selectedTag])
 
-  const visiblePostIds = useMemo(
-    () => visiblePosts.map((p) => p.id).join(','),
-    [visiblePosts]
-  )
   useEffect(() => {
     const fetchViews = async () => {
       const viewsMap: Record<string, number | null> = {}
@@ -160,7 +161,7 @@ export default function ListPage({
     if (visiblePosts.length > 0) {
       void fetchViews()
     }
-  }, [visiblePostIds])
+  }, [visiblePosts])
 
   const handleLoadMore = () => {
     setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE)
