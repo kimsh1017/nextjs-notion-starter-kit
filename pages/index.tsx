@@ -135,6 +135,10 @@ export default function ListPage({
     setVisibleCount(POSTS_PER_PAGE)
   }, [sortOrder, searchQuery, selectedTag])
 
+  const visiblePostIds = useMemo(
+    () => visiblePosts.map((p) => p.id).join(','),
+    [visiblePosts]
+  )
   useEffect(() => {
     const fetchViews = async () => {
       const viewsMap: Record<string, number | null> = {}
@@ -156,7 +160,7 @@ export default function ListPage({
     if (visiblePosts.length > 0) {
       void fetchViews()
     }
-  }, [visiblePosts])
+  }, [visiblePostIds])
 
   const handleLoadMore = () => {
     setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE)
