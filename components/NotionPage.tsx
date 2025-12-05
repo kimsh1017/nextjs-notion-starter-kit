@@ -191,7 +191,7 @@ export function NotionPage({
           return (
             <>
               {dateProperty}
-              {views !== null && ` · ${views} views`}
+              {views !== null && ` · 조회수 ${views}`}
             </>
           )
         }
