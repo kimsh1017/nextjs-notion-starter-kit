@@ -16,6 +16,7 @@ export interface PageProps {
   recordMap?: ExtendedRecordMap
   pageId?: string
   error?: PageError
+  views?: number | null
 }
 
 export interface Params extends ParsedUrlQuery {

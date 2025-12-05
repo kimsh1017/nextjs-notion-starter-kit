@@ -167,7 +167,8 @@ export function NotionPage({
   site,
   recordMap,
   error,
-  pageId
+  pageId,
+  views
 }: types.PageProps) {
   const router = useRouter()
   const lite = useSearchParam('lite')
@@ -184,9 +185,20 @@ export function NotionPage({
       Header: () => null,
       propertyLastEditedTimeValue,
       propertyTextValue,
-      propertyDateValue
+      propertyDateValue: (props, defaultFn) => {
+        const dateProperty = propertyDateValue(props, defaultFn)
+        if (props.schema?.name?.toLowerCase() === 'published') {
+          return (
+            <>
+              {dateProperty}
+              {views !== null && ` · ${views} views`}
+            </>
+          )
+        }
+        return dateProperty
+      }
     }),
-    []
+    [views]
   )
 
   // lite mode is for oembed

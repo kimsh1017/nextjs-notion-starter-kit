@@ -1,4 +1,5 @@
 import { type GetStaticProps } from 'next'
+import { useEffect, useState } from 'react'
 
 import { NotionPage } from '@/components/NotionPage'
 import { domain, isDev } from '@/lib/config'
@@ -49,5 +50,21 @@ export async function getStaticPaths() {
 }
 
 export default function NotionDomainDynamicPage(props: PageProps) {
-  return <NotionPage {...props} />
+  const [views, setViews] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (props.pageId) {
+      fetch(`/api/views/${props.pageId}`, {
+        method: 'POST'
+      })
+        .then((res) => res.json())
+        .then((data: any) => {
+          setViews(data.views)
+        })
+        .catch((err) => {
+          console.error('Error fetching views:', err)
+        })
+    }
+  }, [props.pageId])
+  return <NotionPage {...props} views={views} />
 }
