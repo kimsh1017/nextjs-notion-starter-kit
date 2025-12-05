@@ -22,6 +22,7 @@ interface Post {
   description?: string
   tags?: string[]
   coverImage?: string | null
+  views?: number | null
 }
 
 // Extend PageProps to include our new `posts` prop.
@@ -89,6 +90,7 @@ export default function ListPage({
   const [selectedTag, setSelectedTag] = useState<string>('All')
   const POSTS_PER_PAGE = 8
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
+  const [postViews, setPostViews] = useState<Record<string, number | null>>({})
 
   const toggleSortOrder = () => {
     setSortOrder((current) => (current === 'newest' ? 'oldest' : 'newest'))
@@ -125,13 +127,36 @@ export default function ListPage({
     return sorted
   }, [posts, sortOrder, searchQuery, selectedTag])
 
+  const visiblePosts = sortedAndFilteredPosts.slice(0, visibleCount)
+  const hasMore = visibleCount < sortedAndFilteredPosts.length
+
   // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(POSTS_PER_PAGE)
   }, [sortOrder, searchQuery, selectedTag])
 
-  const visiblePosts = sortedAndFilteredPosts.slice(0, visibleCount)
-  const hasMore = visibleCount < sortedAndFilteredPosts.length
+  useEffect(() => {
+    const fetchViews = async () => {
+      const viewsMap: Record<string, number | null> = {}
+      await Promise.all(
+        visiblePosts.map(async (post) => {
+          try {
+            const res = await fetch(`/api/views/${post.id}`)
+            const data: any = await res.json()
+            viewsMap[post.id] = data.views
+          } catch (err) {
+            console.error(`Error fetching views for ${post.id}:`, err)
+            viewsMap[post.id] = null
+          }
+        })
+      )
+      setPostViews((prevViews) => ({ ...prevViews, ...viewsMap }))
+    }
+
+    if (visiblePosts.length > 0) {
+      void fetchViews()
+    }
+  }, [visiblePosts])
 
   const handleLoadMore = () => {
     setVisibleCount((prevCount) => prevCount + POSTS_PER_PAGE)
@@ -213,6 +238,12 @@ export default function ListPage({
                             {post.publishedDate && (
                               <div className='post-date'>
                                 {formatDate(post.publishedDate)}
+                                {postViews[post.id] !== undefined && (
+                                  <span className='post-views'>
+                                    {' '}
+                                    · 조회 {postViews[post.id]}
+                                  </span>
+                                )}
                               </div>
                             )}
                           </div>
@@ -438,6 +469,14 @@ export default function ListPage({
           }
 
           .post-date {
+            font-size: 0.75rem;
+            line-height: 1;
+            color: var(--fg-color-2);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+          }
+
+          .post-views {
             font-size: 0.75rem;
             line-height: 1;
             color: var(--fg-color-2);
